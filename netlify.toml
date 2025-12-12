@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  # Omit .env.example from secrets scanning because it contains placeholder values
+  SECRETS_SCAN_OMIT_PATHS = ".env.example"
+  
+  # Omit the Public Firebase API Key from smart detection (it is safe to be public)
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyAenSuUuLp5JUj8Bx0RY5z4WlorscUV5aQ"
