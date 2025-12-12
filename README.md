@@ -33,18 +33,11 @@ Everything you need to get started for a SaaS company:
 
 ## Quick Start
 
-### 1. Setup Local Development
-
+### 1. Clone the Repo
 ```bash
 git clone [Your Repo URL]
-cd CMSaasStarter
+cd Freshbase-SAASkit
 npm install
-
-# Create environment file
-cp .env.example .env.local
-
-# Run locally
-npm run dev -- --open
 ```
 
 ### 2. Setup Firebase Project
@@ -66,7 +59,7 @@ npm run dev -- --open
 
 ### 4. Deploy to Netlify
 
-1. Push your code to a GitHub repository.
+1. Push your code to a GitHub repository. (Create the repo on GitHub first, then just ask the AI to push the code to the repo by providing the repo URL) (Create the repo on GitHub first, then just ask the AI to push the code to the repo by providing the repo URL)
 2. Log in to [Netlify](https://www.netlify.com).
 3. Click "Add new site" → "Import an existing project".
 4. Select your GitHub repository.
