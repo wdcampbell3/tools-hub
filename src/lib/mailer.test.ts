@@ -1,34 +1,34 @@
 import { vi, describe, it, expect, beforeEach } from "vitest"
 
-vi.mock("@supabase/supabase-js")
+vi.mock("$lib/firebase-admin.server")
+vi.mock("$lib/firestore.server")
 vi.mock("$env/dynamic/private")
 vi.mock("resend")
 
-import { createClient, type User } from "@supabase/supabase-js"
 import { Resend } from "resend"
 import * as mailer from "./mailer"
 
 describe("mailer", () => {
   const mockSend = vi.fn().mockResolvedValue({ id: "mock-email-id" })
 
-  const mockSupabaseClient = {
-    auth: {
-      admin: {
-        getUserById: vi.fn(),
-      },
-    },
-    from: vi.fn().mockReturnThis(),
-    select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    single: vi.fn(),
+  const mockAdminAuth = {
+    getUser: vi.fn(),
   }
+
+  const mockGetProfile = vi.fn()
 
   beforeEach(async () => {
     vi.clearAllMocks()
     const { env } = await import("$env/dynamic/private")
     env.PRIVATE_RESEND_API_KEY = "mock_resend_api_key"
+
+    const firebaseAdmin = await import("$lib/firebase-admin.server")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(createClient as any).mockReturnValue(mockSupabaseClient)
+    ;(firebaseAdmin as any).adminAuth = mockAdminAuth
+
+    const firestore = await import("$lib/firestore.server")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(firestore as any).getProfile = mockGetProfile
 
     vi.mocked(Resend).mockImplementation(
       () =>
@@ -44,18 +44,16 @@ describe("mailer", () => {
     const mockUser = { id: "user123", email: "user@example.com" }
 
     it("sends welcome email", async () => {
-      mockSupabaseClient.auth.admin.getUserById.mockResolvedValue({
-        data: { user: { email_confirmed_at: new Date().toISOString() } },
-        error: null,
+      mockAdminAuth.getUser.mockResolvedValue({
+        emailVerified: true,
       })
 
-      mockSupabaseClient.single.mockResolvedValue({
-        data: { unsubscribed: false },
-        error: null,
+      mockGetProfile.mockResolvedValue({
+        unsubscribed: false,
       })
 
       await mailer.sendUserEmail({
-        user: mockUser as User,
+        user: mockUser,
         subject: "Test",
         from_email: "test@example.com",
         template_name: "welcome_email",
@@ -74,18 +72,16 @@ describe("mailer", () => {
       const originalConsoleLog = console.log
       console.log = vi.fn()
 
-      mockSupabaseClient.auth.admin.getUserById.mockResolvedValue({
-        data: { user: { email_confirmed_at: new Date().toISOString() } },
-        error: null,
+      mockAdminAuth.getUser.mockResolvedValue({
+        emailVerified: true,
       })
 
-      mockSupabaseClient.single.mockResolvedValue({
-        data: { unsubscribed: true },
-        error: null,
+      mockGetProfile.mockResolvedValue({
+        unsubscribed: true,
       })
 
       await mailer.sendUserEmail({
-        user: mockUser as User,
+        user: mockUser,
         subject: "Test",
         from_email: "test@example.com",
         template_name: "welcome_email",

@@ -1,29 +1,28 @@
 import { fail, redirect } from "@sveltejs/kit"
 import { sendAdminEmail, sendUserEmail } from "$lib/mailer"
 import { WebsiteBaseUrl } from "../../../../config"
+import {
+  getProfile,
+  createProfile,
+  updateProfile,
+  deleteProfile,
+} from "$lib/firestore.server"
+import { adminAuth } from "$lib/firebase-admin.server"
 
 export const actions = {
-  toggleEmailSubscription: async ({ locals: { supabase, safeGetSession } }) => {
-    const { session } = await safeGetSession()
+  toggleEmailSubscription: async ({ locals }) => {
+    const { user } = await locals.getSession()
 
-    if (!session) {
+    if (!user) {
       redirect(303, "/login")
     }
 
-    const { data: currentProfile } = await supabase
-      .from("profiles")
-      .select("unsubscribed")
-      .eq("id", session.user.id)
-      .single()
-
+    const currentProfile = await getProfile(user.id)
     const newUnsubscribedStatus = !currentProfile?.unsubscribed
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({ unsubscribed: newUnsubscribedStatus })
-      .eq("id", session.user.id)
-
-    if (error) {
+    try {
+      await updateProfile(user.id, { unsubscribed: newUnsubscribedStatus })
+    } catch (error) {
       console.error("Error updating subscription status", error)
       return fail(500, { message: "Failed to update subscription status" })
     }
@@ -32,9 +31,10 @@ export const actions = {
       unsubscribed: newUnsubscribedStatus,
     }
   },
-  updateEmail: async ({ request, locals: { supabase, safeGetSession } }) => {
-    const { session } = await safeGetSession()
-    if (!session) {
+
+  updateEmail: async ({ request, locals }) => {
+    const { user } = await locals.getSession()
+    if (!user) {
       redirect(303, "/login")
     }
 
@@ -44,11 +44,7 @@ export const actions = {
     let validationError
     if (!email || email === "") {
       validationError = "An email address is required"
-    }
-    // Dead simple check -- there's no standard here (which is followed),
-    // and lots of errors will be missed until we actually email to verify, so
-    // just do that
-    else if (!email.includes("@")) {
+    } else if (!email.includes("@")) {
       validationError = "A valid email address is required"
     }
     if (validationError) {
@@ -59,11 +55,9 @@ export const actions = {
       })
     }
 
-    // Supabase does not change the email until the user verifies both
-    // if 'Secure email change' is enabled in the Supabase dashboard
-    const { error } = await supabase.auth.updateUser({ email: email })
-
-    if (error) {
+    try {
+      await adminAuth.updateUser(user.id, { email })
+    } catch (error) {
       console.error("Error updating email", error)
       return fail(500, {
         errorMessage: "Unknown error. If this persists please contact us.",
@@ -75,37 +69,16 @@ export const actions = {
       email,
     }
   },
-  updatePassword: async ({ request, locals: { supabase, safeGetSession } }) => {
-    const { session, user, amr } = await safeGetSession()
-    if (!session) {
+
+  updatePassword: async ({ request, locals }) => {
+    const { user } = await locals.getSession()
+    if (!user) {
       redirect(303, "/login")
     }
 
     const formData = await request.formData()
     const newPassword1 = formData.get("newPassword1") as string
     const newPassword2 = formData.get("newPassword2") as string
-    const currentPassword = formData.get("currentPassword") as string
-
-    // Can check if we're a "password recovery" session by checking session amr
-    // let currentPassword take priority if provided (user can use either form)
-    const recoveryAmr = amr?.find((x) => x.method === "recovery")
-    const isRecoverySession = recoveryAmr && !currentPassword
-
-    // if this is password recovery session, check timestamp of recovery session
-    if (isRecoverySession) {
-      const timeSinceLogin = Date.now() - recoveryAmr.timestamp * 1000
-      if (timeSinceLogin > 1000 * 60 * 15) {
-        // 15 mins in milliseconds
-        return fail(400, {
-          errorMessage:
-            'Recovery code expired. Please log out, then use "Forgot Password" on the sign in page to reset your password. Codes are valid for 15 minutes.',
-          errorFields: [],
-          newPassword1,
-          newPassword2,
-          currentPassword: "",
-        })
-      }
-    }
 
     let validationError
     const errorFields = []
@@ -118,11 +91,11 @@ export const actions = {
       errorFields.push("newPassword2")
     }
     if (newPassword1.length < 6) {
-      validationError = "The new password must be at least 6 charaters long"
+      validationError = "The new password must be at least 6 characters long"
       errorFields.push("newPassword1")
     }
     if (newPassword1.length > 72) {
-      validationError = "The new password can be at most 72 charaters long"
+      validationError = "The new password can be at most 72 characters long"
       errorFields.push("newPassword1")
     }
     if (newPassword1 != newPassword2) {
@@ -130,103 +103,60 @@ export const actions = {
       errorFields.push("newPassword1")
       errorFields.push("newPassword2")
     }
-    if (!currentPassword && !isRecoverySession) {
-      validationError =
-        "You must include your current password. If you forgot it, sign out then use 'forgot password' on the sign in page."
-      errorFields.push("currentPassword")
-    }
     if (validationError) {
       return fail(400, {
         errorMessage: validationError,
-        errorFields: [...new Set(errorFields)], // unique values
+        errorFields: [...new Set(errorFields)],
         newPassword1,
         newPassword2,
-        currentPassword,
       })
     }
 
-    // Check current password is correct before updating, but only if they didn't log in with "recover" link
-    // Note: to make this truly enforced you need to contact supabase. See: https://www.reddit.com/r/Supabase/comments/12iw7o1/updating_password_in_supabase_seems_insecure/
-    // However, having the UI accessible route still verify password is still helpful, and needed once you get the setting above enabled
-    if (!isRecoverySession) {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: user?.email || "",
-        password: currentPassword,
-      })
-      if (error) {
-        // The user was logged out because of bad password. Redirect to error page explaining.
-        redirect(303, "/login/current_password_error")
-      }
-    }
-
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword1,
-    })
-    if (error) {
+    try {
+      await adminAuth.updateUser(user.id, { password: newPassword1 })
+    } catch (error) {
       console.error("Error updating password", error)
       return fail(500, {
         errorMessage: "Unknown error. If this persists please contact us.",
         newPassword1,
         newPassword2,
-        currentPassword,
       })
     }
 
     return {
       newPassword1,
       newPassword2,
-      currentPassword,
     }
   },
-  deleteAccount: async ({
-    request,
-    locals: { supabase, supabaseServiceRole, safeGetSession },
-  }) => {
-    const { session, user } = await safeGetSession()
-    if (!session || !user?.id) {
+
+  deleteAccount: async ({ locals }) => {
+    const { user } = await locals.getSession()
+    if (!user) {
       redirect(303, "/login")
     }
 
-    const formData = await request.formData()
-    const currentPassword = formData.get("currentPassword") as string
+    try {
+      // Delete profile from Firestore
+      await deleteProfile(user.id)
 
-    if (!currentPassword) {
-      return fail(400, {
-        errorMessage:
-          "You must provide your current password to delete your account. If you forgot it, sign out then use 'forgot password' on the sign in page.",
-        errorFields: ["currentPassword"],
-        currentPassword,
-      })
-    }
+      // Delete user from Firebase Auth
+      await adminAuth.deleteUser(user.id)
 
-    // Check current password is correct before deleting account
-    const { error: pwError } = await supabase.auth.signInWithPassword({
-      email: user?.email || "",
-      password: currentPassword,
-    })
-    if (pwError) {
-      // The user was logged out because of bad password. Redirect to error page explaining.
-      redirect(303, "/login/current_password_error")
-    }
-
-    const { error } = await supabaseServiceRole.auth.admin.deleteUser(
-      user.id,
-      true,
-    )
-    if (error) {
+      // Clear session cookie
+      locals.clearSessionCookie()
+    } catch (error) {
       console.error("Error deleting user", error)
       return fail(500, {
         errorMessage: "Unknown error. If this persists please contact us.",
-        currentPassword,
       })
     }
 
-    await supabase.auth.signOut()
     redirect(303, "/")
   },
-  updateProfile: async ({ request, locals: { supabase, safeGetSession } }) => {
-    const { session, user } = await safeGetSession()
-    if (!session || !user?.id) {
+
+  updateProfile: async ({ request, locals }) => {
+    const { user } = await locals.getSession()
+    if (!user) {
       redirect(303, "/login")
     }
 
@@ -271,26 +201,26 @@ export const actions = {
       })
     }
 
-    // To check if created or updated, check if priorProfile exists
-    const { data: priorProfile, error: priorProfileError } = await supabase
-      .from("profiles")
-      .select(`*`)
-      .eq("id", session?.user.id)
-      .single()
+    // Check if profile exists
+    const priorProfile = await getProfile(user.id)
+    const isNewProfile = !priorProfile || priorProfile.updated_at === null
 
-    const { error } = await supabase
-      .from("profiles")
-      .upsert({
-        id: user.id,
-        full_name: fullName,
-        company_name: companyName,
-        website: website,
-        updated_at: new Date(),
-        unsubscribed: priorProfile?.unsubscribed ?? false,
-      })
-      .select()
-
-    if (error) {
+    try {
+      if (priorProfile) {
+        await updateProfile(user.id, {
+          full_name: fullName,
+          company_name: companyName,
+          website: website,
+        })
+      } else {
+        await createProfile(user.id, {
+          full_name: fullName,
+          company_name: companyName,
+          website: website,
+          unsubscribed: false,
+        })
+      }
+    } catch (error) {
       console.error("Error updating profile", error)
       return fail(500, {
         errorMessage: "Unknown error. If this persists please contact us.",
@@ -300,18 +230,15 @@ export const actions = {
       })
     }
 
-    // If the profile was just created, send an email to the user and admin
-    const newProfile =
-      priorProfile?.updated_at === null && priorProfileError === null
-    if (newProfile) {
+    // If the profile was just created, send emails
+    if (isNewProfile) {
       await sendAdminEmail({
         subject: "Profile Created",
-        body: `Profile created by ${session.user.email}\nFull name: ${fullName}\nCompany name: ${companyName}\nWebsite: ${website}`,
+        body: `Profile created by ${user.email}\nFull name: ${fullName}\nCompany name: ${companyName}\nWebsite: ${website}`,
       })
 
-      // Send welcome email
       await sendUserEmail({
-        user: session.user,
+        user: { email: user.email ?? "", id: user.id },
         subject: "Welcome!",
         from_email: "no-reply@saasstarter.work",
         template_name: "welcome_email",
@@ -328,13 +255,12 @@ export const actions = {
       website,
     }
   },
-  signout: async ({ locals: { supabase, safeGetSession } }) => {
-    const { session } = await safeGetSession()
-    if (session) {
-      await supabase.auth.signOut()
-      redirect(303, "/")
-    } else {
-      redirect(303, "/")
+
+  signout: async ({ locals }) => {
+    const { user } = await locals.getSession()
+    if (user) {
+      locals.clearSessionCookie()
     }
+    redirect(303, "/")
   },
 }

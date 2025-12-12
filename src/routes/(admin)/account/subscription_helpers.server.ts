@@ -1,53 +1,41 @@
-import type { SupabaseClient, User } from "@supabase/supabase-js"
-import type { Database } from "../../../DatabaseDefinitions"
-
 import { PRIVATE_STRIPE_API_KEY } from "$env/static/private"
 import Stripe from "stripe"
 import { pricingPlans } from "../../(marketing)/pricing/pricing_plans"
+import {
+  getProfile,
+  getStripeCustomer,
+  createStripeCustomer,
+  type AppUser,
+  type Profile,
+} from "$lib/firestore.server"
+
 const stripe = new Stripe(PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
 
 export const getOrCreateCustomerId = async ({
-  supabaseServiceRole,
   user,
 }: {
-  supabaseServiceRole: SupabaseClient<Database>
-  user: User
+  user: AppUser
 }) => {
-  const { data: dbCustomer, error } = await supabaseServiceRole
-    .from("stripe_customers")
-    .select("stripe_customer_id")
-    .eq("user_id", user.id)
-    .single()
+  // Check if customer already exists
+  const existingCustomer = await getStripeCustomer(user.id)
 
-  if (error && error.code != "PGRST116") {
-    // PGRST116 == no rows
-    return { error: error }
+  if (existingCustomer?.stripe_customer_id) {
+    return { customerId: existingCustomer.stripe_customer_id }
   }
 
-  if (dbCustomer?.stripe_customer_id) {
-    return { customerId: dbCustomer.stripe_customer_id }
-  }
-
-  // Fetch data needed to create customer
-  const { data: profile, error: profileError } = await supabaseServiceRole
-    .from("profiles")
-    .select(`full_name, website, company_name`)
-    .eq("id", user.id)
-    .single()
-  if (profileError) {
-    return { error: profileError }
-  }
+  // Fetch profile data for customer creation
+  const profile = await getProfile(user.id)
 
   // Create a stripe customer
   let customer
   try {
     customer = await stripe.customers.create({
-      email: user.email,
-      name: profile.full_name ?? "",
+      email: user.email ?? undefined,
+      name: profile?.full_name ?? "",
       metadata: {
         user_id: user.id,
-        company_name: profile.company_name ?? "",
-        website: profile.website ?? "",
+        company_name: profile?.company_name ?? "",
+        website: profile?.website ?? "",
       },
     })
   } catch (e) {
@@ -58,17 +46,11 @@ export const getOrCreateCustomerId = async ({
     return { error: "Unknown stripe user creation error" }
   }
 
-  // insert instead of upsert so we never over-write. PK ensures later attempts error.
-  const { error: insertError } = await supabaseServiceRole
-    .from("stripe_customers")
-    .insert({
-      user_id: user.id,
-      stripe_customer_id: customer.id,
-      updated_at: new Date(),
-    })
-
-  if (insertError) {
-    return { error: insertError }
+  // Save to Firestore
+  try {
+    await createStripeCustomer(user.id, customer.id)
+  } catch (e) {
+    return { error: e }
   }
 
   return { customerId: customer.id }

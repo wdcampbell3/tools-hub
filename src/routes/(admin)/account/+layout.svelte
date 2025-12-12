@@ -1,23 +1,8 @@
 <script lang="ts">
-  import { invalidate } from "$app/navigation"
-  import { onMount } from "svelte"
+  // Firebase auth is handled on the server via session cookies
+  // No client-side auth state listeners needed
 
-  let { data, children } = $props()
-
-  let { supabase, session } = $state(data)
-  $effect(() => {
-    ;({ supabase, session } = data)
-  })
-
-  onMount(() => {
-    const { data } = supabase.auth.onAuthStateChange((event, _session) => {
-      if (_session?.expires_at !== session?.expires_at) {
-        invalidate("supabase:auth")
-      }
-    })
-
-    return () => data.subscription.unsubscribe()
-  })
+  let { children } = $props()
 </script>
 
 {@render children?.()}

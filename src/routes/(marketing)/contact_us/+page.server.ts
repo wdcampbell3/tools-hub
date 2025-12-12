@@ -1,9 +1,10 @@
 import { fail } from "@sveltejs/kit"
 import { sendAdminEmail } from "$lib/mailer.js"
+import { createContactRequest } from "$lib/firestore.server"
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-  submitContactUs: async ({ request, locals: { supabaseServiceRole } }) => {
+  submitContactUs: async ({ request }) => {
     const formData = await request.formData()
     const errors: { [fieldName: string]: string } = {}
 
@@ -51,10 +52,9 @@ export const actions = {
       return fail(400, { errors })
     }
 
-    // Save to database
-    const { error: insertError } = await supabaseServiceRole
-      .from("contact_requests")
-      .insert({
+    // Save to Firestore
+    try {
+      await createContactRequest({
         first_name: firstName,
         last_name: lastName,
         email,
@@ -63,8 +63,7 @@ export const actions = {
         message_body: message,
         updated_at: new Date(),
       })
-
-    if (insertError) {
+    } catch (insertError) {
       console.error("Error saving contact request", insertError)
       return fail(500, { errors: { _: "Error saving" } })
     }

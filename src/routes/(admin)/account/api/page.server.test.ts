@@ -13,29 +13,33 @@ vi.mock("@sveltejs/kit", async () => {
   }
 })
 
+vi.mock("$lib/firestore.server", () => ({
+  getProfile: vi.fn(),
+  updateProfile: vi.fn(),
+}))
+
 describe("toggleEmailSubscription", () => {
-  const mockSupabase = {
-    from: vi.fn().mockReturnThis(),
-    select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    single: vi.fn().mockResolvedValue({ data: null }),
-    update: vi.fn().mockReturnThis(),
-  }
+  const mockGetSession = vi.fn()
+  const mockGetProfile = vi.fn()
+  const mockUpdateProfile = vi.fn()
 
-  const mockSafeGetSession = vi.fn()
-
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
+
+    const firestore = await import("$lib/firestore.server")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(firestore as any).getProfile = mockGetProfile
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(firestore as any).updateProfile = mockUpdateProfile
   })
 
   it("should redirect if no session", async () => {
-    mockSafeGetSession.mockResolvedValue({ session: null })
+    mockGetSession.mockResolvedValue({ user: null })
 
     await expect(
       actions.toggleEmailSubscription({
         locals: {
-          supabase: mockSupabase,
-          safeGetSession: mockSafeGetSession,
+          getSession: mockGetSession,
         },
       } as any),
     ).rejects.toThrow("Redirect")
@@ -44,75 +48,59 @@ describe("toggleEmailSubscription", () => {
   })
 
   it("should toggle subscription status from false to true", async () => {
-    const mockSession = { user: { id: "user123" } }
-    mockSafeGetSession.mockResolvedValue({ session: mockSession })
+    const mockUser = { id: "user123", email: "test@example.com" }
+    mockGetSession.mockResolvedValue({ user: mockUser })
 
-    // Mock the first query to get the current status
-    mockSupabase.single.mockResolvedValueOnce({ data: { unsubscribed: false } })
+    // Mock getting the current profile
+    mockGetProfile.mockResolvedValueOnce({ unsubscribed: false })
 
-    // Mock the update query
-    const mockUpdateChain = {
-      eq: vi.fn().mockResolvedValue({ error: null }),
-    }
-
-    mockSupabase.update.mockReturnValue(mockUpdateChain)
+    // Mock the update
+    mockUpdateProfile.mockResolvedValueOnce(undefined)
 
     const result = await actions.toggleEmailSubscription({
-      locals: { supabase: mockSupabase, safeGetSession: mockSafeGetSession },
+      locals: { getSession: mockGetSession },
     } as any)
 
-    expect(mockSupabase.from).toHaveBeenCalledWith("profiles")
-    expect(mockSupabase.select).toHaveBeenCalledWith("unsubscribed")
-    expect(mockSupabase.eq).toHaveBeenCalledWith("id", "user123")
-    expect(mockSupabase.single).toHaveBeenCalled()
-    expect(mockSupabase.update).toHaveBeenCalledWith({ unsubscribed: true })
-    expect(mockUpdateChain.eq).toHaveBeenCalledWith("id", "user123")
+    expect(mockGetProfile).toHaveBeenCalledWith("user123")
+    expect(mockUpdateProfile).toHaveBeenCalledWith("user123", {
+      unsubscribed: true,
+    })
     expect(result).toEqual({ unsubscribed: true })
   })
 
   it("should toggle subscription status from true to false", async () => {
-    const mockSession = { user: { id: "user123" } }
-    mockSafeGetSession.mockResolvedValue({ session: mockSession })
+    const mockUser = { id: "user123", email: "test@example.com" }
+    mockGetSession.mockResolvedValue({ user: mockUser })
 
-    // Mock the first query to get the current status
-    mockSupabase.single.mockResolvedValueOnce({ data: { unsubscribed: true } })
+    // Mock getting the current profile
+    mockGetProfile.mockResolvedValueOnce({ unsubscribed: true })
 
-    // Mock the update query
-    const mockUpdateChain = {
-      eq: vi.fn().mockResolvedValue({ error: null }),
-    }
-
-    mockSupabase.update.mockReturnValue(mockUpdateChain)
+    // Mock the update
+    mockUpdateProfile.mockResolvedValueOnce(undefined)
 
     const result = await actions.toggleEmailSubscription({
-      locals: { supabase: mockSupabase, safeGetSession: mockSafeGetSession },
+      locals: { getSession: mockGetSession },
     } as any)
 
-    expect(mockSupabase.from).toHaveBeenCalledWith("profiles")
-    expect(mockSupabase.select).toHaveBeenCalledWith("unsubscribed")
-    expect(mockSupabase.eq).toHaveBeenCalledWith("id", "user123")
-    expect(mockSupabase.single).toHaveBeenCalled()
-    expect(mockSupabase.update).toHaveBeenCalledWith({ unsubscribed: false })
-    expect(mockUpdateChain.eq).toHaveBeenCalledWith("id", "user123")
+    expect(mockGetProfile).toHaveBeenCalledWith("user123")
+    expect(mockUpdateProfile).toHaveBeenCalledWith("user123", {
+      unsubscribed: false,
+    })
     expect(result).toEqual({ unsubscribed: false })
   })
 
   it("should return fail response if update operation fails", async () => {
-    const mockSession = { user: { id: "user123" } }
-    mockSafeGetSession.mockResolvedValue({ session: mockSession })
+    const mockUser = { id: "user123", email: "test@example.com" }
+    mockGetSession.mockResolvedValue({ user: mockUser })
 
-    // Mock the first query to get the current status
-    mockSupabase.single.mockResolvedValueOnce({ data: { unsubscribed: false } })
+    // Mock getting the current profile
+    mockGetProfile.mockResolvedValueOnce({ unsubscribed: false })
 
-    // Mock the update query to return an error
-    const mockUpdateChain = {
-      eq: vi.fn().mockResolvedValue({ error: new Error("Update failed") }),
-    }
-
-    mockSupabase.update.mockReturnValue(mockUpdateChain)
+    // Mock the update to throw an error
+    mockUpdateProfile.mockRejectedValueOnce(new Error("Update failed"))
 
     await actions.toggleEmailSubscription({
-      locals: { supabase: mockSupabase, safeGetSession: mockSafeGetSession },
+      locals: { getSession: mockGetSession },
     } as any)
 
     // Check if fail was called with the correct arguments

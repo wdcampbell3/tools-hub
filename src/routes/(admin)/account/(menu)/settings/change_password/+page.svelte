@@ -3,42 +3,35 @@
   import { getContext } from "svelte"
   import type { Writable } from "svelte/store"
   import SettingsModule from "../settings_module.svelte"
+  import { auth } from "$lib/firebase"
+  import { sendPasswordResetEmail } from "firebase/auth"
 
   let adminSection: Writable<string> = getContext("adminSection")
   adminSection.set("settings")
 
   let { data } = $props()
-  let { user, supabase } = data
+  let { user } = data
 
-  // True if definitely has a password, but can be false if they
-  // logged in with oAuth or email link
-
-  // @ts-expect-error: we ignore because Supabase does not maintain an AMR typedef
-  let hasPassword = user?.amr?.find((x) => x.method === "password")
-    ? true
-    : false
-
-  // @ts-expect-error: we ignore because Supabase does not maintain an AMR typedef
-  let usingOAuth = user?.amr?.find((x) => x.method === "oauth") ? true : false
+  // For Firebase, we always use password reset email flow
+  let hasPassword = true
 
   let sendBtnDisabled = $state(false)
   let sendBtnText = $state("Send Set Password Email")
   let sentEmail = $state(false)
-  let sendForgotPassword = () => {
+  let sendForgotPassword = async () => {
     sendBtnDisabled = true
     sendBtnText = "Sending..."
 
-    let email = user?.email
+    const email = user?.email
     if (email) {
-      supabase.auth
-        .resetPasswordForEmail(email, {
-          redirectTo: `${$page.url.origin}/auth/callback?next=%2Faccount%2Fsettings%2Freset_password`,
-        })
-        .then((d) => {
-          sentEmail = d.error ? false : true
-          sendBtnDisabled = false
-          sendBtnText = "Send Forgot Password Email"
-        })
+      try {
+        await sendPasswordResetEmail(auth, email)
+        sentEmail = true
+      } catch (error) {
+        sentEmail = false
+      }
+      sendBtnDisabled = false
+      sendBtnText = "Send Forgot Password Email"
     }
   }
 </script>
@@ -70,12 +63,6 @@
         initialValue: "",
         inputType: "password",
       },
-      {
-        id: "currentPassword",
-        label: "Current Password",
-        initialValue: "",
-        inputType: "password",
-      },
     ]}
   />
 {:else}
@@ -83,15 +70,7 @@
     class="card p-6 pb-7 mt-8 max-w-xl flex flex-col md:flex-row shadow-sm max-w-md"
   >
     <div class="flex flex-col gap-y-4">
-      {#if usingOAuth}
-        <div class="font-bold">Set Password By Email</div>
-        <div>
-          You use oAuth to sign in ("Sign in with Github" or similar). You can
-          continue to access your account using only oAuth if you like!
-        </div>
-      {:else}
-        <div class="font-bold">Change Password By Email</div>
-      {/if}
+      <div class="font-bold">Change Password By Email</div>
       <div>
         The button below will send you an email at {user?.email} which will allow
         you to set your password.

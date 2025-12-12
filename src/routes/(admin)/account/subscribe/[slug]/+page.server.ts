@@ -8,13 +8,9 @@ import {
 import type { PageServerLoad } from "./$types"
 const stripe = new Stripe(PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
 
-export const load: PageServerLoad = async ({
-  params,
-  url,
-  locals: { safeGetSession, supabaseServiceRole },
-}) => {
-  const { session, user } = await safeGetSession()
-  if (!session) {
+export const load: PageServerLoad = async ({ params, url, locals }) => {
+  const { user } = await locals.getSession()
+  if (!user) {
     redirect(303, "/login")
   }
 
@@ -24,7 +20,6 @@ export const load: PageServerLoad = async ({
   }
 
   const { error: idError, customerId } = await getOrCreateCustomerId({
-    supabaseServiceRole,
     user,
   })
   if (idError || !customerId) {

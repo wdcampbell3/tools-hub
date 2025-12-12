@@ -5,16 +5,13 @@ import {
 } from "../../subscription_helpers.server"
 import type { PageServerLoad } from "./$types"
 
-export const load: PageServerLoad = async ({
-  locals: { safeGetSession, supabaseServiceRole },
-}) => {
-  const { session, user } = await safeGetSession()
-  if (!session || !user?.id) {
+export const load: PageServerLoad = async ({ locals }) => {
+  const { user } = await locals.getSession()
+  if (!user) {
     redirect(303, "/login")
   }
 
   const { error: idError, customerId } = await getOrCreateCustomerId({
-    supabaseServiceRole,
     user,
   })
   if (idError || !customerId) {
