@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private"
+import { building } from "$app/environment"
 import Stripe from "stripe"
 import { pricingPlans } from "../../(marketing)/pricing/pricing_plans"
 import {
@@ -9,7 +10,7 @@ import {
   type Profile,
 } from "$lib/firestore.server"
 
-const stripe = new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
+const stripe = building ? ({} as Stripe) : new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
 
 export const getOrCreateCustomerId = async ({
   user,

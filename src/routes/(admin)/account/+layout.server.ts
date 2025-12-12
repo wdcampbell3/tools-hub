@@ -1,6 +1,8 @@
 import type { LayoutServerLoad } from "./$types"
 import { getProfile } from "$lib/firestore.server"
 
+export const prerender = false
+
 export const load: LayoutServerLoad = async ({ locals: { user } }) => {
   // User here is from authGuard hook in hooks.server.ts
   let profile = null
