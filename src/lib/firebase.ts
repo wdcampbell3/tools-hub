@@ -2,6 +2,7 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app"
 import { getAuth, type Auth } from "firebase/auth"
 import { getFirestore, type Firestore } from "firebase/firestore"
+import { getAnalytics, type Analytics } from "firebase/analytics"
 import {
   PUBLIC_FIREBASE_API_KEY,
   PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -9,6 +10,7 @@ import {
   PUBLIC_FIREBASE_STORAGE_BUCKET,
   PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   PUBLIC_FIREBASE_APP_ID,
+  PUBLIC_FIREBASE_MEASUREMENT_ID,
 } from "$env/static/public"
 
 const firebaseConfig = {
@@ -18,11 +20,13 @@ const firebaseConfig = {
   storageBucket: PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: PUBLIC_FIREBASE_APP_ID,
+  measurementId: PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
 let app: FirebaseApp
 let auth: Auth
 let db: Firestore
+let analytics: Analytics
 
 // Initialize Firebase (only once)
 if (!getApps().length) {
@@ -33,5 +37,8 @@ if (!getApps().length) {
 
 auth = getAuth(app)
 db = getFirestore(app)
+if (typeof window !== "undefined") {
+  analytics = getAnalytics(app)
+}
 
-export { app, auth, db }
+export { app, auth, db, analytics }

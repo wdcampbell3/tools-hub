@@ -34,20 +34,20 @@ Everything you need to get started for a SaaS company:
 ## Quick Start
 
 ### 1. Clone the Repo
-```bash
-git clone [Your Repo URL]
-cd Freshbase-SAASkit
-npm install
-```
+1. Ask the AI to clone the repo by providing the repo URL
+2. Ask the AI to install dependencies
+3. Ask the AI to run `npm run dev` to start the development server
+4. Let the AI fix any audit warnings or update recommendations that come up
+5. Open localhost:5173 in your browser
 
 ### 2. Setup Firebase Project
 
 1. Go to [Firebase Console](https://console.firebase.google.com) and create a new project.
-2. Enable **Authentication** (Email/Password and Google providers).
-3. Create a **Firestore Database** in production mode.
-4. Get your credentials:
-   - **Client-side**: Project Settings → General → Your apps → Web app.
-   - **Server-side**: Project Settings → Service accounts → Generate new private key.
+2. Enable **Authentication** (Email/Password and Google providers). (Create the project on Firebase first, then Build --> Authentication --> Sign-in method --> Email/Password and Google providers—if desired)
+3. Create a **Firestore Database** in production mode. (Build --> Firestore Database --> Create database --> Production mode)
+4. Get your credentials from the previous step:
+   - **Client-side**: Go to the Project Overview tab and click "Add an App". Select Web as the app platform. Copy the values from the "Web app" section.
+   - **Server-side**: Under Project Settings → Service accounts → Generate new private key and download the JSON with the values.
 5. Update `.env.local` with these values (see `.env.example` for the required fields).
 
 ### 3. Setup Stripe
@@ -64,7 +64,7 @@ npm install
 3. Click "Add new site" → "Import an existing project".
 4. Select your GitHub repository.
 5. In "Build settings", the defaults (Base directory: `/`, Build command: `npm run build`, Publish directory: `build` or `public`) usually work, but SvelteKit's adapter-auto handles this.
-6. **Crucial**: Add your environment variables in Netlify (Site configuration → Environment variables). Add all keys from your `.env.local`.
+6. **Crucial**: Add your environment variables in Netlify (Site configuration → Environment variables). Add all keys from your `.env.local`. NOTE: you can copy the values from your `.env.local` file and paste them into Netlify. (just remove any comments, just keep the key-value pairs) ALSO, after importing make sure to check the "Secret values" box for all PRIVATE_ variables.
 
 ## Performance
 
@@ -73,6 +73,3 @@ The selected tech stack creates lightning fast websites:
 - Edge-ready deployment.
 - Svelte and Tailwind optimization.
 
-## Sponsor: Kiln AI
-
-CMSaasStarter is sponsored by [Kiln AI](https://getkiln.ai): the easiest way to build AI products.
