@@ -6,20 +6,23 @@
   const themeLight = "saasstartertheme-light"
   const themeDark = "saasstartertheme"
 
-  onMount(() => {
-    // 1. Check local storage
+  onMount(async () => {
+    // 1. Check local storage first
     const savedTheme = localStorage.getItem("theme")
     if (savedTheme) {
       isLight = savedTheme === themeLight
       document.documentElement.setAttribute("data-theme", savedTheme)
     } else {
-      // 2. Fallback to system preference
-      const prefersLight = window.matchMedia(
-        "(prefers-color-scheme: light)",
-      ).matches
-      if (prefersLight) {
-        isLight = true
-        document.documentElement.setAttribute("data-theme", themeLight)
+      // 2. No saved preference - fetch project default from API
+      try {
+        const res = await fetch('/api/theme/state')
+        const data = await res.json()
+        const defaultTheme = data.defaultTheme === 'light' ? themeLight : themeDark
+        isLight = data.defaultTheme === 'light'
+        document.documentElement.setAttribute("data-theme", defaultTheme)
+      } catch (e) {
+        // Fallback to dark if API fails
+        document.documentElement.setAttribute("data-theme", themeDark)
       }
     }
   })

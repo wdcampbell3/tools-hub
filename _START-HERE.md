@@ -90,6 +90,6 @@ Everything you need to get started for a SaaS company including:
 2. Navigate to `http://localhost:5173/styles` in your browser.
 3. You can edit the color palette for both **Light** and **Dark** modes independently.
 4. Changes are previewed in real-time.
-5. Click **Save** to persist changes to `src/app.css` automatically.
+5. Click **Save** to make changes to `src/app.css` automatically.
 6. Use **Restore Defaults** if you ever need to reset to the original look.
 

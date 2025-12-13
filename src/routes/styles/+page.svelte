@@ -7,7 +7,7 @@
     const themeLight = "saasstartertheme-light";
     const themeDark = "saasstartertheme";
 
-    // Project default toggle state (mock)
+    // Project default toggle state
     let projectDefaultIsLight = false;
 
     // Color Palette Data with metadata
@@ -33,6 +33,7 @@
     let darkColors: Record<string, string> = {};
     let isSaving = false;
     let saveMessage = "";
+    let defaultSaveMessage = "";
     let isLoading = true;
 
     // Computed: Current active colors for the UI inputs
@@ -41,31 +42,37 @@
 
     onMount(async () => {
         // 1. Fetch source of truth from app.css
+        let fetchedDefaultTheme = 'dark'; // fallback
         try {
             const res = await fetch('/api/theme/state');
             const data = await res.json();
             if (data.light && data.dark) {
                 lightColors = data.light;
                 darkColors = data.dark;
+                
+                // Set default toggle based on API response
+                if (data.defaultTheme) {
+                    projectDefaultIsLight = data.defaultTheme === 'light';
+                    fetchedDefaultTheme = data.defaultTheme;
+                }
             }
         } catch (e) {
             console.error("Failed to fetch initial theme state", e);
         }
 
-        // 2. Initialize Theme Mode
+        // 2. Initialize Theme Mode - check localStorage first, then use project default
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme) {
             isLight = savedTheme === themeLight;
         } else {
-            const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-            if (prefersLight) {
-                isLight = true;
-            }
+            // Use project default (fetched from CSS)
+            isLight = fetchedDefaultTheme === 'light';
         }
         
         applyTheme(isLight);
         isLoading = false;
     });
+
 
     function applyTheme(light: boolean) {
         const themeName = light ? themeLight : themeDark;
@@ -129,7 +136,8 @@
                     colors: {
                         light: lightColors,
                         dark: darkColors
-                    }
+                    },
+                    defaultTheme: projectDefaultIsLight ? 'light' : 'dark'
                 }),
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -145,6 +153,27 @@
             console.error(e);
         } finally {
             isSaving = false;
+        }
+    }
+
+    async function toggleProjectDefault() {
+        projectDefaultIsLight = !projectDefaultIsLight;
+        // Auto-save the default theme change
+        try {
+            await fetch('/api/theme/save', {
+                method: 'POST',
+                body: JSON.stringify({
+                    colors: { light: lightColors, dark: darkColors },
+                    defaultTheme: projectDefaultIsLight ? 'light' : 'dark'
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            defaultSaveMessage = "Saved!";
+            setTimeout(() => defaultSaveMessage = "", 2000);
+        } catch (e) {
+            console.error('Failed to save default theme:', e);
+            defaultSaveMessage = "Error!";
+            setTimeout(() => defaultSaveMessage = "", 2000);
         }
     }
 
@@ -219,8 +248,8 @@
                     onchange={importTheme}
                 />
                 <label for="theme-import" class="btn btn-sm btn-ghost">Import</label>
-                <button class="btn btn-sm btn-ghost" onclick={restoreDefaults}>Restore</button>
                 <button class="btn btn-sm btn-ghost" onclick={exportTheme}>Export</button>
+                <button class="btn btn-sm btn-ghost" onclick={restoreDefaults}>Restore</button>
                 <button class="btn btn-sm btn-primary" onclick={saveProjectWide} disabled={isSaving}>
                      {#if isSaving}<span class="loading loading-spinner loading-xs"></span>{/if}
                      Save
@@ -240,17 +269,29 @@
                     <span class="text-sm font-medium px-2 {isLight ? 'text-primary' : 'opacity-50'}">Light</span>
                 </div>
                 
-                <!-- Project Default Toggle (Mock) -->
-                 <div class="form-control">
-                    <label class="label cursor-pointer gap-2">
-                        <span class="label-text text-xs uppercase tracking-wide opacity-70">Project Default:</span>
-                        <span class="label-text text-sm font-bold">{projectDefaultIsLight ? 'Light' : 'Dark'}</span> 
-                        <input type="checkbox" class="toggle toggle-xs" checked={projectDefaultIsLight} onchange={() => projectDefaultIsLight = !projectDefaultIsLight} />
-                    </label>
-                </div>
             </div>
         </div>
     </div>
+
+    <!-- Project Default Theme -->
+    <section class="bg-base-200 p-6 rounded-box border border-base-content/10">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="text-lg font-bold">Project Default Theme</h2>
+                <p class="text-sm opacity-70">The initial theme new visitors will see when they first arrive.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                {#if defaultSaveMessage}
+                    <span class="text-sm text-success font-medium animate-pulse">{defaultSaveMessage}</span>
+                {/if}
+                <div class="flex items-center gap-3 bg-base-100 p-3 rounded-lg border border-base-content/10">
+                    <span class="text-sm font-medium {projectDefaultIsLight ? 'opacity-50' : 'text-primary'}">Dark</span>
+                    <input type="checkbox" class="toggle toggle-primary" checked={projectDefaultIsLight} onchange={toggleProjectDefault} />
+                    <span class="text-sm font-medium {projectDefaultIsLight ? 'text-primary' : 'opacity-50'}">Light</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Typography -->
     <section>

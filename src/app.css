@@ -10,74 +10,35 @@
 @plugin "daisyui/theme" {
   name: "saasstartertheme";
   default: true;
-  /* set as default */
   prefersdark: true;
-  /* set as default dark mode */
   color-scheme: dark;
-  /* color of browser-provided UI */
 
   --color-primary: #1e82ca;
-  /* Brand color: Primary buttons, active links, important highlights */
   --color-primary-content: #001a1f;
-  /* Text color on top of primary elements */
-
   --color-secondary: #cfcfcf;
-  /* Secondary background: Alternative button styles, secondary highlights */
   --color-secondary-content: #ffffff;
-  /* Text color on top of secondary elements */
-
   --color-accent: #1e82ca;
-  /* Accent color: Toggles, checkboxes, range sliders, focused inputs */
   --color-accent-content: #ffffff;
-  /* Text color on top of accent elements */
-
   --color-neutral: #0a0a1f;
-  /* Neutral color: Dark background areas, footer backgrounds, neutral buttons */
   --color-neutral-content: #fefbf6;
-  /* Text color on top of neutral elements */
-
   --color-base-100: #050510;
-  /* Base Background: Main page background, body color */
-  /* Base Secondary: Card backgrounds, sidebar backgrounds, input fields */
   --color-base-200: #242447;
   --color-base-300: #196194;
-  /* Base Tertiary: Hover states, emphasized card backgrounds */
   --color-base-content: #ffffff;
-  /* Base Text: Main body text color, headers, paragraphs */
-
   --color-info: #01b3cb;
-  /* Info: Informational alerts, toasts, badges */
   --color-info-content: #ffffff;
-  /* Text on info elements */
-
   --color-success: #00d181;
-  /* Success: Success alerts, success buttons, completion states */
   --color-success-content: #ffffff;
-  /* Text on success elements */
-
   --color-warning: #ffb700;
-  /* Warning: Warning alerts, caution states */
   --color-warning-content: #ffffff;
-  /* Text on warning elements */
-
   --color-error: #e82f21;
-  /* Error: Error alerts, danger buttons, destructive actions */
   --color-error-content: #ffffff;
-  /* Text on error elements */
-
-  /* border radius */
   --radius-selector: 1rem;
   --radius-field: 0.5rem;
   --radius-box: 0.5rem;
-
-  /* base sizes */
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
-
-  /* border size */
   --border: 1px;
-
-  /* effects */
   --depth: 1;
   --noise: 0;
 }
@@ -89,60 +50,31 @@
   color-scheme: light;
 
   --color-primary: #1e82ca;
-  /* Brand color: Primary buttons, active links, important highlights */
   --color-primary-content: #ffffff;
-  /* Text color on top of primary elements */
   --color-secondary: #f0f0f0;
-  /* Secondary background: Alternative button styles, secondary highlights */
   --color-secondary-content: #000000;
-  /* Text color on top of secondary elements */
   --color-accent: #1e82ca;
-  /* Accent color: Toggles, checkboxes, range sliders, focused inputs */
   --color-accent-content: #ffffff;
-  /* Text color on top of accent elements */
   --color-neutral: #0a0a1f;
-  /* Neutral color: Dark background areas, footer backgrounds, neutral buttons */
   --color-neutral-content: #ffffff;
-  /* Text color on top of neutral elements */
-  /* Base Background: Main page background, body color */
   --color-base-100: #f8f9fa;
-  /* Base Secondary: Card backgrounds, sidebar backgrounds, input fields */
   --color-base-200: #ffffff;
-  /* Base Tertiary: Hover states, emphasized card backgrounds */
   --color-base-300: #96bee9;
-  /* Base Text: Main body text color, headers, paragraphs */
   --color-base-content: #1f2937;
-
   --color-info: #01b3cb;
-  /* Info: Informational alerts, toasts, badges */
   --color-info-content: #ffffff;
-  /* Text on info elements */
   --color-success: #00d181;
-  /* Success: Success alerts, success buttons, completion states */
   --color-success-content: #ffffff;
-  /* Text on success elements */
   --color-warning: #ffb700;
-  /* Warning: Warning alerts, caution states */
   --color-warning-content: #ffffff;
-  /* Text on warning elements */
   --color-error: #e82f21;
-  /* Error: Error alerts, danger buttons, destructive actions */
   --color-error-content: #ffffff;
-  /* Text on error elements */
-
-  /* border radius */
   --radius-selector: 1rem;
   --radius-field: 0.5rem;
   --radius-box: 0.5rem;
-
-  /* base sizes */
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
-
-  /* border size */
   --border: 1px;
-
-  /* effects */
   --depth: 1;
   --noise: 0;
 }
@@ -201,7 +133,7 @@
 }
 
 .btn-outline {
-  border-width: 2px;
+  border-width: 2px !important;
 }
 
 a {
