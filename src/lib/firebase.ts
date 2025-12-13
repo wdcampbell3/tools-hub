@@ -1,7 +1,7 @@
 // Client-side Firebase configuration
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app"
-import { getAuth, type Auth } from "firebase/auth"
-import { getFirestore, type Firestore } from "firebase/firestore"
+import { getAuth } from "firebase/auth"
+import { getFirestore } from "firebase/firestore"
 import { getAnalytics, type Analytics } from "firebase/analytics"
 import {
   PUBLIC_FIREBASE_API_KEY,
@@ -24,24 +24,32 @@ const firebaseConfig = {
 }
 
 let app: FirebaseApp
-let auth: Auth
-let db: Firestore
 let analytics: Analytics
 
-import { getStorage, type FirebaseStorage } from "firebase/storage"
+import { getStorage } from "firebase/storage"
+import { dev } from "$app/environment"
+import { connectAuthEmulator } from "firebase/auth"
+import { connectFirestoreEmulator } from "firebase/firestore"
 
 export { app, auth, db, analytics, storage }
 
-let storage: FirebaseStorage
 if (!getApps().length) {
   app = initializeApp(firebaseConfig)
 } else {
   app = getApps()[0]
 }
 
-auth = getAuth(app)
-db = getFirestore(app)
-storage = getStorage(app)
+// Initialize Firebase services
+const auth = getAuth(app)
+const db = getFirestore(app)
+const storage = getStorage(app)
+
+if (dev) {
+  // In dev, use Firebase Storage (or emulator if set up)
+  connectAuthEmulator(auth, "http://127.0.0.1:9099")
+  connectFirestoreEmulator(db, "127.0.0.1", 8080)
+}
+
 if (typeof window !== "undefined") {
   analytics = getAnalytics(app)
 }

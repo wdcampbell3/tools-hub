@@ -28,10 +28,14 @@
 
   {#each sortedBlogPosts as post}
     <a href={post.link}>
-      <div class="card my-6 bg-base-200 shadow-xl border border-base-content/5 flex-row overflow-hidden hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+      <div
+        class="card my-6 bg-base-200 shadow-xl border border-base-content/5 flex-row overflow-hidden hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+      >
         <div class="flex-none w-6 md:w-32 bg-base-300"></div>
         <div class="py-6 px-6">
-          <div class="text-xl text-base-content font-bold mb-2">{post.title}</div>
+          <div class="text-xl text-base-content font-bold mb-2">
+            {post.title}
+          </div>
           <div class="text-sm text-primary mb-3">
             {post.parsedDate?.toLocaleDateString("en-US", {
               month: "short",
@@ -39,7 +43,9 @@
               year: "numeric",
             })}
           </div>
-          <div class="text-base-content/70 text-sm leading-relaxed">{post.description}</div>
+          <div class="text-base-content/70 text-sm leading-relaxed">
+            {post.description}
+          </div>
         </div>
       </div>
     </a>

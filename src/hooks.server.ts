@@ -1,10 +1,6 @@
-// src/hooks.server.ts
 import { adminAuth } from "$lib/firebase-admin.server"
-import {
-  getProfile,
-  decodedTokenToAppUser,
-  type AppUser,
-} from "$lib/firestore.server"
+import { decodedTokenToAppUser, type AppUser } from "$lib/firestore.server"
+// import { redirect } from "@sveltejs/kit" // Removed unused import
 import type { Handle } from "@sveltejs/kit"
 import { sequence } from "@sveltejs/kit/hooks"
 import type { DecodedIdToken } from "firebase-admin/auth"

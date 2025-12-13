@@ -1,13 +1,13 @@
 import type { LayoutServerLoad } from "./$types"
 
 export const load: LayoutServerLoad = async ({
-  locals: { session },
+  locals: { user },
   cookies,
   url,
 }) => {
   return {
     url: url.origin,
     cookies: cookies.getAll(),
-    session,
+    user,
   }
 }

@@ -2,7 +2,6 @@
 
 This file provides context for AI coding assistants (Gemini, Claude, Copilot, etc.) to understand the project architecture, tech stack, and coding conventions.
 
-
 **Start here**: Before writing any code, review the documentation in the **`docs/`** directory. It contains the data schema, function map, roadmap, and style guide. The information in `docs/` is the source of truth for the project's architecture.
 
 ## Project Overview
@@ -24,49 +23,54 @@ This file provides context for AI coding assistants (Gemini, Claude, Copilot, et
 ## Architecture & patterns
 
 ### 1. Authentication (Firebase)
+
 - **Mechanism**: We use session cookies (`__session`) for server-side authentication, not client-side tokens.
 - **Client-side**: `src/lib/firebase.ts` initializes the app.
 - **Server-side**: `src/lib/firebase-admin.server.ts` uses `firebase-admin` to verify cookies and manage users.
 - **Flow**:
-    1. User logs in via client SDK (`signInWithEmailAndPassword` or `signInWithPopup`).
-    2. Client POSTs the ID token to `/auth/session`.
-    3. Server creates a session cookie and sets it.
-    4. Subequent requests are authenticated via the cookie in `hooks.server.ts`.
+  1. User logs in via client SDK (`signInWithEmailAndPassword` or `signInWithPopup`).
+  2. Client POSTs the ID token to `/auth/session`.
+  3. Server creates a session cookie and sets it.
+  4. Subequent requests are authenticated via the cookie in `hooks.server.ts`.
 
 ### 2. Database (Firestore)
+
 - **Helper Module**: Always use `src/lib/firestore.server.ts` for database interactions. Do not use the raw Firestore SDK in routes if a helper exists.
 - **Collections**:
-    - `profiles`: `{ id (uid), full_name, company_name, website, unsubscribed, updated_at }`
-    - `stripe_customers`: `{ user_id, stripe_customer_id, updated_at }`
-    - `contact_requests`: `{ first_name, last_name, email, message_body, ... }`
+  - `profiles`: `{ id (uid), full_name, company_name, website, unsubscribed, updated_at }`
+  - `stripe_customers`: `{ user_id, stripe_customer_id, updated_at }`
+  - `contact_requests`: `{ first_name, last_name, email, message_body, ... }`
 - **Data Fetching**:
-    - Fetch data in `+page.server.ts` or `+layout.server.ts`.
-    - Pass data to the client via the `load` function.
+  - Fetch data in `+page.server.ts` or `+layout.server.ts`.
+  - Pass data to the client via the `load` function.
 
 ### 3. Payments (Stripe)
+
 - **Integration**: We map Firebase `uid` to Stripe Customer IDs in the `stripe_customers` collection.
 - **Subscription Helpers**: Use `src/routes/(admin)/account/subscription_helpers.server.ts` for:
-    - `getOrCreateCustomerId`: Ensures a stripe customer exists for the user.
-    - `fetchSubscription`: Gets current subscription status.
+  - `getOrCreateCustomerId`: Ensures a stripe customer exists for the user.
+  - `fetchSubscription`: Gets current subscription status.
 
 ### 4. Storage Strategy (Hybrid)
+
 - **Public Images (Cloudinary)**:
-    - **Use for**: User avatars, post images, marketing assets.
-    - **Why**: Bandwidth optimization, auto-format (WebP/AVIF), on-the-fly resizing.
-    - **Protocol**: Upload via `src/lib/server/cloudinary.ts`. Store `public_id` in Firestore. Generate URLs on client using `src/lib/cloudinary-client.ts`.
+  - **Use for**: User avatars, post images, marketing assets.
+  - **Why**: Bandwidth optimization, auto-format (WebP/AVIF), on-the-fly resizing.
+  - **Protocol**: Upload via `src/lib/server/cloudinary.ts`. Store `public_id` in Firestore. Generate URLs on client using `src/lib/cloudinary-client.ts`.
 - **Private Files (Firebase Storage)**:
-    - **Use for**: PDFs, invoices, backup archives, sensitive user docs.
-    - **Why**: Strict security rules, cost-effective for raw storage.
-    - **Protocol**: Use `storage` from `src/lib/firebase.ts` directly.
+  - **Use for**: PDFs, invoices, backup archives, sensitive user docs.
+  - **Why**: Strict security rules, cost-effective for raw storage.
+  - **Protocol**: Use `storage` from `src/lib/firebase.ts` directly.
 
 ### 5. Styling (DaisyUI)
+
 - Use DaisyUI component classes (e.g., `btn`, `card`, `input`, `alert`) instead of raw Tailwind utility piles where possible.
 - **Theme Editor**: The project includes a visual editor at `/styles`. Use this to preview components.
 - **Theme System**:
-    - `src/app.css` contains two distinct theme blocks: `saasstartertheme` (Dark) and `saasstartertheme-light` (Light).
-    - **Independent Editing**: Changes to one theme MUST NOT affect the other.
-    - **Persistence**: The `/styles` page writes directly to `app.css` via `POST /api/theme/save`.
-    - **Defaults**: `src/lib/theme-defaults.ts` contains the immutable default color values.
+  - `src/app.css` contains two distinct theme blocks: `saasstartertheme` (Dark) and `saasstartertheme-light` (Light).
+  - **Independent Editing**: Changes to one theme MUST NOT affect the other.
+  - **Persistence**: The `/styles` page writes directly to `app.css` via `POST /api/theme/save`.
+  - **Defaults**: `src/lib/theme-defaults.ts` contains the immutable default color values.
 
 ## Critical Rules for AI
 

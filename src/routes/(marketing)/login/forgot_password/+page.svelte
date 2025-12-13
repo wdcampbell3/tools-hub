@@ -15,11 +15,12 @@
     try {
       await sendPasswordResetEmail(auth, email)
       successMessage = "Password reset email sent! Check your inbox."
-    } catch (error: any) {
-      if (error.code === "auth/user-not-found") {
+    } catch (error: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((error as any).code === "auth/user-not-found") {
         errorMessage = "No account found with this email"
       } else {
-        errorMessage = error.message || "Failed to send reset email"
+        errorMessage = (error as Error).message || "Failed to send reset email"
       }
     } finally {
       loading = false
@@ -45,7 +46,13 @@
   </div>
 {/if}
 
-<form onsubmit={(e) => { e.preventDefault(); handleResetPassword() }} class="space-y-4">
+<form
+  onsubmit={(e) => {
+    e.preventDefault()
+    handleResetPassword()
+  }}
+  class="space-y-4"
+>
   <div class="form-control">
     <label class="label" for="email">
       <span class="label-text">Email</span>
@@ -70,5 +77,6 @@
 </form>
 
 <div class="text-l text-slate-800 mt-4">
-  Remember your password? <a class="underline" href="/login/sign_in">Sign in</a>.
+  Remember your password? <a class="underline" href="/login/sign_in">Sign in</a
+  >.
 </div>

@@ -5,7 +5,7 @@
     WebsiteDescription,
   } from "./../../config"
 
-  const landingHeroTech = "/images/hero-vibe-coder.png";
+  const landingHeroTech = "/images/hero-vibe-coder.png"
 
   const ldJson = {
     "@context": "https://schema.org",
@@ -75,7 +75,8 @@
     {
       name: "Subscriptions",
       link: "/pricing",
-      description: "Accept recurring payments easily with a robust system designed for modern SaaS businesses.",
+      description:
+        "Accept recurring payments easily with a robust system designed for modern SaaS businesses.",
       svgContent: `<path d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z" stroke="#1C274C" stroke-width="1.5"/>
 <path d="M10 16.5H6" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 <path d="M8 13.5H6" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
@@ -112,7 +113,8 @@
     {
       name: "Search",
       link: "/search",
-      description: "Instant search functionality to help your users find exactly what they need immediately.",
+      description:
+        "Instant search functionality to help your users find exactly what they need immediately.",
       svgContent: `
 <path d="M22 13V12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4H10C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20H13" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 <path d="M10 16H6" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
@@ -124,7 +126,8 @@
       name: "Email",
       link: "https://github.com/CriticalMoments/CMSaasStarter/blob/main/email_docs.md",
       linkText: "Docs",
-      description: "Send professional automated emails to welcome new users and keep them updated.",
+      description:
+        "Send professional automated emails to welcome new users and keep them updated.",
       svgContent: `<path d="M22 10C22.0185 10.7271 22 11.0542 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H13" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 <path d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 <circle cx="19" cy="5" r="3" stroke="#1C274C" stroke-width="1.5"/>`,
@@ -140,7 +143,8 @@
     },
     {
       name: "Responsive & Themeable",
-      description: "Looks perfect on any device. Easily customize colors to match your brand identity.",
+      description:
+        "Looks perfect on any device. Easily customize colors to match your brand identity.",
       svgContent: `<path d="M11 17H8C5.17157 17 3.75736 17 2.87868 16.1213C2 15.2426 2 13.8284 2 11V10C2 6.22876 2 4.34315 3.17157 3.17157C4.34315 2 6.22876 2 10 2H15.5C17.8346 2 19.0019 2 19.8856 2.47231C20.5833 2.84525 21.1548 3.4167 21.5277 4.11441C22 4.99805 22 6.16537 22 8.5" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 <path d="M14 15C14 13.1144 14 12.1716 14.5858 11.5858C15.1716 11 16.1144 11 18 11C19.8856 11 20.8284 11 21.4142 11.5858C22 12.1716 22 13.1144 22 15V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V15Z" stroke="#1C274C" stroke-width="1.5"/>
 <path d="M19 20H17" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
@@ -162,16 +166,21 @@
 </svelte:head>
 
 <div class="min-h-[70vh] relative overflow-hidden w-full">
-  
   <!-- Hero Image Background - Full width -->
   <div class="absolute inset-0 w-full h-full z-0">
-      <!-- Adaptive Overlay: Darkens in Dark Mode, Lightens in Light Mode -->
-      <div class="absolute inset-0 bg-base-100/80 z-10 pointer-events-none"></div>
+    <!-- Adaptive Overlay: Darkens in Dark Mode, Lightens in Light Mode -->
+    <div class="absolute inset-0 bg-base-100/80 z-10 pointer-events-none"></div>
 
-      <!-- Gradient Fade Overlay -->
-      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-base-100 to-transparent z-40 pointer-events-none"></div>
-      
-      <img src="{landingHeroTech}" alt="AI Tech Background" class="w-full h-full object-cover opacity-80" />
+    <!-- Gradient Fade Overlay -->
+    <div
+      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-base-100 to-transparent z-40 pointer-events-none"
+    ></div>
+
+    <img
+      src={landingHeroTech}
+      alt="AI Tech Background"
+      class="w-full h-full object-cover opacity-80"
+    />
   </div>
 
   <!-- Content Container -->
@@ -189,35 +198,51 @@
         style="line-height: 1.1;"
       >
         Build Free. Launch Fast.
-        <span class="block text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300 mt-2">
-           Made for Vibe Coders
+        <span
+          class="block text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300 mt-2"
+        >
+          Made for Vibe Coders
         </span>
       </div>
 
-      <p class="text-lg md:text-2xl text-base-content/90 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-md">
-        The custom-designed, low-tech SaaS starter kit. Built for AI-forward IDEs like 
-        <span class="text-primary font-bold">Google's Antigravity</span> and <span class="text-primary font-bold">Cursor</span>, 
-        allowing you to launch web apps fast and for <span class="text-primary font-bold">FREE</span>.
+      <p
+        class="text-lg md:text-2xl text-base-content/90 max-w-2xl mx-auto mb-4 leading-relaxed font-normal drop-shadow-md"
+      >
+        The custom-designed, low-tech SaaS starter kit. Built for AI-forward
+        IDEs like
+        <a
+          href="https://antigravity.google"
+          target="_blank"
+          class="text-base-content underline">Antigravity</a
+        >
+        and
+        <a
+          href="https://cursor.com/"
+          target="_blank"
+          class="text-base-content underline">Cursor</a
+        >, allowing you to launch web apps fast and for
+        <span class="text-base-content font-bold">FREE</span>.
       </p>
 
-      <div class="text-sm md:text-base text-base-content/70 mb-10 font-medium">
-        Built with 
-        <a href="https://kit.svelte.dev" class="link hover:text-primary transition-colors text-base-content" target="_blank">SvelteKit</a>,
-        <a href="https://firebase.google.com" class="link hover:text-primary transition-colors text-base-content" target="_blank">Firebase</a>,
-        <a href="https://stripe.com" class="link hover:text-primary transition-colors text-base-content" target="_blank">Stripe</a>,
-        <a href="https://cloudinary.com" class="link hover:text-primary transition-colors text-base-content" target="_blank">Cloudinary</a>,
-        <a href="https://tailwindcss.com" class="link hover:text-primary transition-colors text-base-content" target="_blank">Tailwind</a>, &
-        <a href="https://daisyui.com" class="link hover:text-primary transition-colors text-base-content" target="_blank">DaisyUI</a>.
-      </div>
+      <a
+        href="https://github.com/wdcampbell3/Freshbase-SAAS-Kit/blob/main/docs/roadmap.md"
+        target="_blank"
+        class="block text-primary font-bold hover:underline mb-10 text-lg"
+        >Follow our app-building road map!</a
+      >
 
       <div class="flex justify-center mb-16">
-         <a href="https://github.com/wdcampbell3/Freshbase-SAAS-Kit/blob/main/_START-HERE.md" target="_blank">
-            <button class="btn btn-primary btn-lg px-10 shadow-[0_0_20px_rgba(66,161,250,0.5)] hover:shadow-[0_0_40px_rgba(66,161,250,0.7)] border-none text-white font-bold text-xl bg-linear-to-r from-primary to-cyan-400">
-               Get Started
-            </button>
-         </a>
+        <a
+          href="https://github.com/wdcampbell3/Freshbase-SAAS-Kit/blob/main/_START-HERE.md"
+          target="_blank"
+        >
+          <button
+            class="btn btn-primary btn-lg px-10 shadow-[0_0_20px_rgba(66,161,250,0.5)] hover:shadow-[0_0_40px_rgba(66,161,250,0.7)] border-none text-white font-bold text-xl bg-linear-to-r from-primary to-cyan-400"
+          >
+            Get Started
+          </button>
+        </a>
       </div>
-      
     </div>
   </div>
 </div>
@@ -225,23 +250,65 @@
 <div class="min-h-[50vh] relative z-20 bg-base-100">
   <div class="pb-24 px-7">
     <div class="max-w-4xl mx-auto text-center mb-16">
-      <div
-        class="text-3xl md:text-5xl font-bold text-base-content mb-4"
-      >
-        Everything you need. <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300">Nothing you don't.</span>
+      <div class="text-3xl md:text-5xl font-bold text-base-content mb-4">
+        Everything you need. <span
+          class="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300"
+          >Nothing you don't.</span
+        >
       </div>
-      <p class="text-xl text-base-content/70">
-         Skip the pricey subscriptions like Lovable, Bolt, or Base44. Own your code.
+      <p class="text-xl md:text-2xl text-base-content/90 max-w-2xl mx-auto">
+        Skip the pricey subscriptions like Lovable, Bolt, or Base44. Own your
+        code.
       </p>
+
+      <div
+        class="text-sm md:text-base text-base-content/70 mt-4 mb-4 font-medium"
+      >
+        Built with
+        <a
+          href="https://kit.svelte.dev"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">SvelteKit</a
+        >,
+        <a
+          href="https://firebase.google.com"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">Firebase</a
+        >,
+        <a
+          href="https://stripe.com"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">Stripe</a
+        >,
+        <a
+          href="https://cloudinary.com"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">Cloudinary</a
+        >,
+        <a
+          href="https://tailwindcss.com"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">Tailwind</a
+        >, &
+        <a
+          href="https://daisyui.com"
+          class="link hover:text-primary transition-colors text-base-content"
+          target="_blank">DaisyUI</a
+        >.
+      </div>
     </div>
 
     <div
       class="flex gap-6 max-w-[1200px] mx-auto place-content-center flex-wrap"
     >
       {#each features as feature}
-        <div class="card bg-base-200 shadow-xl border border-base-content/5 w-[280px] min-h-[280px] flex-none hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <div
+          class="card bg-base-200 shadow-xl border border-base-content/5 w-[280px] min-h-[280px] flex-none hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+        >
           <div class="card-body items-center text-center p-8">
-            <div class="p-3 rounded-2xl bg-base-100 mb-4 text-primary shadow-sm">
+            <div
+              class="p-3 rounded-2xl bg-base-100 mb-4 text-primary shadow-sm"
+            >
               <svg
                 width="40px"
                 height="40px"
@@ -251,7 +318,9 @@
                 class="text-primary"
               >
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                {@html feature.svgContent.replace(/fill="#1C274C"/g, 'fill="currentColor"').replace(/stroke="#1C274C"/g, 'stroke="currentColor"')}
+                {@html feature.svgContent
+                  .replace(/fill="#1C274C"/g, 'fill="currentColor"')
+                  .replace(/stroke="#1C274C"/g, 'stroke="currentColor"')}
               </svg>
             </div>
             <h2 class="card-title text-base-content mb-2">

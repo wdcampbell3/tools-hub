@@ -4,7 +4,9 @@ import { error, redirect } from "@sveltejs/kit"
 import Stripe from "stripe"
 import { getOrCreateCustomerId } from "../../../subscription_helpers.server"
 import type { PageServerLoad } from "./$types"
-const stripe = building ? ({} as Stripe) : new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
+const stripe = building
+  ? ({} as Stripe)
+  : new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
 
 export const load: PageServerLoad = async ({ url, locals }) => {
   const { user } = await locals.getSession()

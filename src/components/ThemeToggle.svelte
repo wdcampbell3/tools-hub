@@ -15,10 +15,11 @@
     } else {
       // 2. No saved preference - fetch project default from API
       try {
-        const res = await fetch('/api/theme/state')
+        const res = await fetch("/api/theme/state")
         const data = await res.json()
-        const defaultTheme = data.defaultTheme === 'light' ? themeLight : themeDark
-        isLight = data.defaultTheme === 'light'
+        const defaultTheme =
+          data.defaultTheme === "light" ? themeLight : themeDark
+        isLight = data.defaultTheme === "light"
         document.documentElement.setAttribute("data-theme", defaultTheme)
       } catch (e) {
         // Fallback to dark if API fails

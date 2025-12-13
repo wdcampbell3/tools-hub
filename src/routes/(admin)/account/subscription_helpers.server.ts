@@ -7,16 +7,13 @@ import {
   getStripeCustomer,
   createStripeCustomer,
   type AppUser,
-  type Profile,
 } from "$lib/firestore.server"
 
-const stripe = building ? ({} as Stripe) : new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
+const stripe = building
+  ? ({} as Stripe)
+  : new Stripe(env.PRIVATE_STRIPE_API_KEY, { apiVersion: "2023-08-16" })
 
-export const getOrCreateCustomerId = async ({
-  user,
-}: {
-  user: AppUser
-}) => {
+export const getOrCreateCustomerId = async ({ user }: { user: AppUser }) => {
   // Check if customer already exists
   const existingCustomer = await getStripeCustomer(user.id)
 
