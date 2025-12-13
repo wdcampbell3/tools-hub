@@ -26,7 +26,8 @@ Everything you need to get started for a SaaS company:
 
 - **Web Framework**: SvelteKit
 - **Styling**: TailwindCSS, DaisyUI
-- **Hosting**: Netlify (recommended)
+- **Hosting/Deployment**: Netlify (recommended)
+- **File Storage**: Cloudinary (optional)
 - **Authentication**: Firebase Auth
 - **Database**: Firebase Firestore
 - **Payments**: Stripe Checkout & Portal
@@ -34,11 +35,13 @@ Everything you need to get started for a SaaS company:
 ## Quick Start
 
 ### 1. Clone the Repo
-1. Ask the AI to clone the repo by providing the repo URL
-2. Ask the AI to install dependencies
-3. Ask the AI to run `npm run dev` to start the development server
-4. Let the AI fix any audit warnings or update recommendations that come up
-5. Open localhost:5173 in your browser
+1. Make a new folder for your project on your computer.
+2. Open the folder with Antigravity, Cursor, or any other code editor.
+3. Ask the AI to clone the repo by providing this URL: https://github.com/wdcampbell3/Freshbase-SAAS-Kit
+4. Ask the AI to install dependencies
+5. Ask the AI to run `npm run dev` to start the development server
+6. Let the AI fix any audit warnings or update recommendations that come up
+7. Open localhost:5173 in your browser
 
 ### 2. Setup Firebase Project
 
@@ -50,21 +53,28 @@ Everything you need to get started for a SaaS company:
    - **Server-side**: Under Project Settings → Service accounts → Generate new private key and download the JSON with the values.
 5. Update `.env.local` with these values (see `.env.example` for the required fields).
 
-### 3. Setup Stripe
+### 3. Setup Cloudinary (Optional, for hosting and optimizing non-UI images, user uploads, etc)
+
+1. Go to [Cloudinary Console](https://cloudinary.com) and create a new account.
+2. "Go to API Keys" and click "Generate new API Key".
+3. Copy your API Key, API Secret, and Cloud Name.
+4. Update `.env.local` with the provided environment variables (see `.env.example` for the required fields).
+
+### 4. Setup Stripe (Optional, for taking payments)
 
 1. Create a [Stripe account](https://stripe.com).
 2. Get your [Secret API key](https://dashboard.stripe.com/test/apikeys) and add it to `PRIVATE_STRIPE_API_KEY` in `.env.local`.
 3. Create your products in Stripe Dashboard.
 4. Update `src/routes/(marketing)/pricing/pricing_plans.ts` with your Stripe product/price IDs.
 
-### 4. Deploy to Netlify
+### 5. Deploy to Netlify (Optional, for hosting your website)
 
 1. Push your code to a GitHub repository. (Create the repo on GitHub first, then just ask the AI to push the code to the repo by providing the repo URL)
 2. Log in to [Netlify](https://www.netlify.com).
 3. Click "Add new site" → "Import an existing project".
 4. Select your GitHub repository.
 5. In "Build settings", the defaults (Base directory: `/`, Build command: `npm run build`, Publish directory: `build` or `public`) usually work, but SvelteKit's adapter-auto handles this.
-6. **Crucial**: Add your environment variables in Netlify (Site configuration → Environment variables). Add all keys from your `.env.local`. NOTE: you can copy the values from your `.env.local` file and paste them into Netlify. (just remove any comments, just keep the key-value pairs) ALSO, after importing make sure to check the "Secret values" box for all PRIVATE_ variables.
+6. **Crucial**: Add your environment variables in Netlify (Site configuration → Environment variables). Add all keys from your `.env.local`. NOTE: you can copy the values from your `.env.local` file and paste them into Netlify. (just remove any comments, just keep the key-value pairs) ALSO, after importing make sure to check the "Secret values" box for all PRIVATE variables.
 
 ## Performance
 

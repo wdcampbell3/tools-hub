@@ -18,6 +18,8 @@ This file provides context for AI coding assistants (Gemini, Claude, Copilot, et
 - **Payments**: Stripe (Checkout & Billing Portal)
 - **Hosting**: Netlify (Adapter Auto)
 - **Email**: Resend (Transactional emails)
+- **File Storage (Public)**: Cloudinary (Images/Avatars) - Optimized & transformed
+- **File Storage (Private)**: Firebase Storage (Docs/Receipts) - Secure & raw
 
 ## Architecture & patterns
 
@@ -47,7 +49,17 @@ This file provides context for AI coding assistants (Gemini, Claude, Copilot, et
     - `getOrCreateCustomerId`: Ensures a stripe customer exists for the user.
     - `fetchSubscription`: Gets current subscription status.
 
-### 4. Styling (DaisyUI)
+### 4. Storage Strategy (Hybrid)
+- **Public Images (Cloudinary)**:
+    - **Use for**: User avatars, post images, marketing assets.
+    - **Why**: Bandwidth optimization, auto-format (WebP/AVIF), on-the-fly resizing.
+    - **Protocol**: Upload via `src/lib/server/cloudinary.ts`. Store `public_id` in Firestore. Generate URLs on client using `src/lib/cloudinary-client.ts`.
+- **Private Files (Firebase Storage)**:
+    - **Use for**: PDFs, invoices, backup archives, sensitive user docs.
+    - **Why**: Strict security rules, cost-effective for raw storage.
+    - **Protocol**: Use `storage` from `src/lib/firebase.ts` directly.
+
+### 5. Styling (DaisyUI)
 - Use DaisyUI component classes (e.g., `btn`, `card`, `input`, `alert`) instead of raw Tailwind utility piles where possible.
 - Theme information is in `app.css` and `tailwind.config.js`.
 

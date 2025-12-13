@@ -59,7 +59,7 @@ Example `src/app.css`:
 @plugin "daisyui/theme" {
   name: "saasstartertheme";
   default: true;
-  --color-primary: #180042; /* Change this hex code */
+  --color-primary: #42a1fa; /* Change this hex code */
   /* ... */
 }
 ```

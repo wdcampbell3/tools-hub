@@ -28,7 +28,11 @@ let auth: Auth
 let db: Firestore
 let analytics: Analytics
 
-// Initialize Firebase (only once)
+import { getStorage, type FirebaseStorage } from "firebase/storage"
+
+export { app, auth, db, analytics, storage }
+
+let storage: FirebaseStorage
 if (!getApps().length) {
   app = initializeApp(firebaseConfig)
 } else {
@@ -37,8 +41,7 @@ if (!getApps().length) {
 
 auth = getAuth(app)
 db = getFirestore(app)
+storage = getStorage(app)
 if (typeof window !== "undefined") {
   analytics = getAnalytics(app)
 }
-
-export { app, auth, db, analytics }

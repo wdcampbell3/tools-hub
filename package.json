@@ -46,6 +46,7 @@
   },
   "type": "module",
   "dependencies": {
+    "cloudinary": "^2.8.0",
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
     "handlebars": "^4.7.8",
