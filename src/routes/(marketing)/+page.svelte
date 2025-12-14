@@ -208,7 +208,7 @@
       <p
         class="text-lg md:text-2xl text-base-content/90 max-w-2xl mx-auto mb-4 leading-relaxed font-normal drop-shadow-md"
       >
-        The custom-designed, low-tech SaaS starter kit. Built for AI-forward
+        The custom-designed, low-code SaaS starter kit. Built for AI-forward
         IDEs like
         <a
           href="https://antigravity.google"
