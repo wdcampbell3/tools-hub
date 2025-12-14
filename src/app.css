@@ -91,7 +91,6 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -114,7 +113,8 @@
 }
 
 .card:not(.card-bordered) {
-  border: 1px solid color-mix(in srgb, var(--color-base-content), transparent 90%);
+  border: 1px solid
+    color-mix(in srgb, var(--color-base-content), transparent 90%);
 }
 
 .input:not(.input-ghost):hover,

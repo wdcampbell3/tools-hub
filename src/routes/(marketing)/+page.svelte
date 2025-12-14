@@ -208,8 +208,7 @@
       <p
         class="text-lg md:text-2xl text-base-content/90 max-w-2xl mx-auto mb-4 leading-relaxed font-normal drop-shadow-md"
       >
-        A custom-designed tech stack built for AI-forward
-        tools like
+        A custom-designed tech stack built for AI-forward tools like
         <a
           href="https://antigravity.google"
           target="_blank"

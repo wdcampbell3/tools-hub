@@ -62,10 +62,11 @@ This kit comes with three key documents designed to work together:
 2.  **`docs/launch_guide.md`**: Your **Strategy & Strategy**. Read this for "vibe coding" best practices, AI prompt engineering, and a high-level overview of how to build features.
 3.  **`docs/roadmap.md`**: Your **Master Checklist**. Use this as a living document to track your progress from idea to launch. It breaks down the entire process into actionable boxes to check off.
 
-**Suggested Workflow:** 
+**Suggested Workflow:**
 Complete the setup in this file -> Read the Strategy Guide -> Execute using the Roadmap.
 
 **Other Helper Docs:**
+
 - **`docs/data_schema.md`**: Reference for your database structure.
 - **`docs/function_map.md`**: Quick lookup for key functions and API endpoints.
 
