@@ -126,3 +126,12 @@ _Time to go live!_
 5. Use **Restore Defaults** if you ever need to reset to the original look.
 
 Happy building! 🚀
+
+---
+
+### 9. Next Steps
+
+Now that you're set up, it's time to build!
+
+- **Strategy**: Read **[`docs/launch_guide.md`](docs/launch_guide.md)** next. It's essential for first-time builders to understand how to "vibe code" effectively with AI.
+- **Execution**: Use **[`docs/roadmap.md`](docs/roadmap.md)** as your interactive checklist. Mark items off as you go to track your journey from idea to launch!
