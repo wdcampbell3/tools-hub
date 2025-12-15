@@ -8,8 +8,10 @@ let adminApp: App
 let adminAuth: Auth
 let adminDb: Firestore
 
-// Initialize Firebase Admin (only once)
-if (!building) {
+// Skip initialization during build or tests
+const isTestEnv = typeof process !== "undefined" && process.env.VITEST
+
+if (!building && !isTestEnv) {
   if (!getApps().length) {
     adminApp = initializeApp({
       credential: cert({
