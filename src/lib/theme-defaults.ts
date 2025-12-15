@@ -1,10 +1,10 @@
 export const DEFAULT_THEME = {
   light: {
-    "--color-primary": "#1e82ca",
+    "--color-primary": "#066ab1",
     "--color-primary-content": "#ffffff",
-    "--color-secondary": "#f0f0f0",
+    "--color-secondary": "#cfcfcf",
     "--color-secondary-content": "#000000",
-    "--color-accent": "#1e82ca",
+    "--color-accent": "#4cdaf6",
     "--color-accent-content": "#ffffff",
     "--color-neutral": "#0a0a1f",
     "--color-neutral-content": "#ffffff",
@@ -20,13 +20,14 @@ export const DEFAULT_THEME = {
     "--color-warning-content": "#ffffff",
     "--color-error": "#e82f21",
     "--color-error-content": "#ffffff",
+    "--main-link-color": "var(--color-primary)",
   },
   dark: {
-    "--color-primary": "#1e82ca",
+    "--color-primary": "#066ab1",
     "--color-primary-content": "#001a1f",
     "--color-secondary": "#cfcfcf",
     "--color-secondary-content": "#ffffff",
-    "--color-accent": "#1e82ca",
+    "--color-accent": "#4cdaf6",
     "--color-accent-content": "#ffffff",
     "--color-neutral": "#0a0a1f",
     "--color-neutral-content": "#fefbf6",
@@ -42,5 +43,6 @@ export const DEFAULT_THEME = {
     "--color-warning-content": "#ffffff",
     "--color-error": "#e82f21",
     "--color-error-content": "#ffffff",
+    "--main-link-color": "var(--color-primary)",
   },
 }

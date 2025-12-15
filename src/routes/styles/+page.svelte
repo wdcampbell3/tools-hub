@@ -117,12 +117,14 @@
     }
 
     applyTheme(isLight)
-    updateLinkToggleState()
+    // Pass colors directly since reactive currentColors hasn't updated yet
+    updateLinkToggleState(isLight ? lightColors : darkColors)
   })
 
-  function updateLinkToggleState() {
+  function updateLinkToggleState(colors?: Record<string, string>) {
     // Check the current theme's link color setting
-    const linkColor = currentColors["--main-link-color"]
+    const colorsToCheck = colors ?? currentColors
+    const linkColor = colorsToCheck["--main-link-color"]
     defaultLinkIsPrimary = !!linkColor && linkColor.includes("primary")
   }
 
@@ -161,12 +163,14 @@
     defaultLinkIsPrimary = !defaultLinkIsPrimary
     const newVal = defaultLinkIsPrimary ? "var(--color-primary)" : "inherit"
 
-    // Update both light and dark or just current?
-    // Requirement implies "Default link color" is a setting used across the board?
-    // Usually theme settings like this are per-theme, but let's assume per-theme to follow the architecture.
-    // We update the CURRENT theme's setting.
+    // Update BOTH light and dark themes (global setting, not per-theme)
+    lightColors["--main-link-color"] = newVal
+    darkColors["--main-link-color"] = newVal
+    lightColors = lightColors // Trigger reactivity
+    darkColors = darkColors // Trigger reactivity
 
-    updateColor("--main-link-color", newVal)
+    // Apply to current view
+    document.documentElement.style.setProperty("--main-link-color", newVal)
 
     // Auto-save logic
     try {
@@ -322,10 +326,10 @@
   <title>Styles & Examples - Freshbase SaaS Kit</title>
 </svelte:head>
 
-<div class="container mx-auto p-10 space-y-24 relative">
+<div class="container mx-auto px-10 pb-10 space-y-24 relative">
   <!-- Top Bar with Toggles & Actions -->
   <div
-    class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-base-content/10 pb-10 gap-6"
+    class="sticky top-0 z-50 bg-base-100 pt-10 flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-base-content/10 pb-10 gap-6"
   >
     <div>
       <h1 class="text-4xl font-bold mb-2">Design System</h1>
@@ -499,8 +503,6 @@
           eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
         </p>
         <div class="pt-4 flex items-center flex-wrap gap-y-2">
-          <a href="/styles" class="link link-primary">Primary Link</a>
-          <span class="mx-2 opacity-30">|</span>
           <a href="/styles" class="link mr-3">Default Link Color:</a>
           <div
             class="join bg-base-200 p-1 rounded-lg border border-base-content/10 mr-3"
@@ -508,7 +510,7 @@
             <button
               class="join-item btn btn-xs {defaultLinkIsPrimary
                 ? 'btn-ghost opacity-50'
-                : 'btn-white shadow-sm'}"
+                : 'btn-primary'}"
               onclick={() => {
                 if (defaultLinkIsPrimary) toggleDefaultLinkColor()
               }}

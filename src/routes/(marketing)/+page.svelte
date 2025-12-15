@@ -188,7 +188,7 @@
     <!-- Text and Buttons -->
     <div class="max-w-4xl relative z-40 mt-16 px-4">
       <div
-        class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300 mb-4 tracking-widest uppercase"
+        class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-accent mb-4 tracking-widest uppercase"
       >
         Freshbase SaaS Kit
       </div>
@@ -199,7 +199,7 @@
       >
         Build Free. Launch Fast.
         <span
-          class="block text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300 mt-2"
+          class="block text-transparent bg-clip-text bg-linear-to-r from-primary to-accent mt-2"
         >
           Made for Vibe Coders
         </span>
@@ -235,7 +235,7 @@
           target="_blank"
         >
           <button
-            class="btn btn-primary btn-lg px-10 shadow-[0_0_20px_rgba(66,161,250,0.5)] hover:shadow-[0_0_40px_rgba(66,161,250,0.7)] border-none text-white font-bold text-xl bg-linear-to-r from-primary to-cyan-400"
+            class="btn btn-primary btn-lg px-10 shadow-[0_0_20px_rgba(66,161,250,0.5)] hover:shadow-[0_0_40px_rgba(66,161,250,0.7)] border-none text-white font-bold text-xl bg-linear-to-r from-primary to-accent"
           >
             Get Started
           </button>
@@ -250,13 +250,12 @@
     <div class="max-w-4xl mx-auto text-center mb-16">
       <div class="text-3xl md:text-5xl font-bold text-base-content mb-4">
         Everything you need. <span
-          class="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-300"
+          class="text-transparent bg-clip-text bg-linear-to-r from-primary to-accent"
           >Nothing you don't.</span
         >
       </div>
       <p class="text-xl md:text-2xl text-base-content/90 max-w-2xl mx-auto">
-        Skip the pricey subscriptions like Lovable, Bolt, or Base44. Own your
-        code.
+        Skip the pricey subscriptions like Lovable, Bolt, or Base44.
       </p>
 
       <div

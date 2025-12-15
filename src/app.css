@@ -13,11 +13,11 @@
   prefersdark: true;
   color-scheme: dark;
 
-  --color-primary: #1e82ca;
+  --color-primary: #066ab1;
   --color-primary-content: #001a1f;
   --color-secondary: #cfcfcf;
   --color-secondary-content: #ffffff;
-  --color-accent: #1e82ca;
+  --color-accent: #4cdaf6;
   --color-accent-content: #ffffff;
   --color-neutral: #0a0a1f;
   --color-neutral-content: #fefbf6;
@@ -50,11 +50,11 @@
   prefersdark: false;
   color-scheme: light;
 
-  --color-primary: #1e82ca;
+  --color-primary: #066ab1;
   --color-primary-content: #ffffff;
-  --color-secondary: #f0f0f0;
+  --color-secondary: #cfcfcf;
   --color-secondary-content: #000000;
-  --color-accent: #1e82ca;
+  --color-accent: #4cdaf6;
   --color-accent-content: #ffffff;
   --color-neutral: #0a0a1f;
   --color-neutral-content: #ffffff;
@@ -91,6 +91,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -113,8 +114,7 @@
 }
 
 .card:not(.card-bordered) {
-  border: 1px solid
-    color-mix(in srgb, var(--color-base-content), transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--color-base-content), transparent 90%);
 }
 
 .input:not(.input-ghost):hover,
