@@ -3,12 +3,16 @@
   import { navigating } from "$app/stores"
   import { expoOut } from "svelte/easing"
   import { slide } from "svelte/transition"
+  import GoogleAnalytics from "$lib/components/GoogleAnalytics.svelte"
+
   interface Props {
     children?: import("svelte").Snippet
   }
 
   let { children }: Props = $props()
 </script>
+
+<GoogleAnalytics />
 
 {#if $navigating}
   <!-- 
