@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { env } from '$env/dynamic/public';
+  import { PUBLIC_GOOGLE_ANALYTICS_ID } from '$env/static/public';
   
-  const gaId = env.PUBLIC_GOOGLE_ANALYTICS_ID;
+  const gaId = PUBLIC_GOOGLE_ANALYTICS_ID;
 </script>
 
-{#if gaId}
-  <svelte:head>
+<svelte:head>
+  {#if gaId}
     <script async src="https://www.googletagmanager.com/gtag/js?id={gaId}"></script>
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {@html `
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,5 +16,5 @@
       gtag('config', '${gaId}');
     </script>
     `}
-  </svelte:head>
-{/if}
+  {/if}
+</svelte:head>
