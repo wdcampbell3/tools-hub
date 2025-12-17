@@ -45,7 +45,7 @@ _We picked a modern, robust stack that scales from day one:_
 ### 0. Reference for AI Models (Important!)
 
 **Using an AI assistant like Antigravity or Cursor?**
-For anything beyond basic tweaks it's good practice to reference the `_AI-CONTEXT.md` file to your AI at the start of a chat.
+For anything beyond basic tweaks it's good practice to reference the [_AI-CONTEXT.md](_AI-CONTEXT.md) file to your AI at the start of a chat.
 
 - It contains the "brain" of the project: architecture rules, tech stack details, and coding conventions.
 - Giving this context helps the AI write perfect code for _this_ specific project and avoids outdated patterns.
@@ -58,17 +58,17 @@ You'll need a code editor. We highly recommend **[Antigravity](https://antigravi
 
 This kit comes with three key documents designed to work together:
 
-1.  **`_START-HERE.md`** (This File): Your **Technical Setup Guide**. Use this first to install tools, configure Firebase/Stripe, and get the app running.
-2.  **`docs/launch_guide.md`**: Your **Strategy & Strategy**. Read this for "vibe coding" best practices, AI prompt engineering, and a high-level overview of how to build features.
-3.  **`docs/roadmap.md`**: Your **Master Checklist**. Use this as a living document to track your progress from idea to launch. It breaks down the entire process into actionable boxes to check off.
+1.  **[_START-HERE.md](_START-HERE.md)** (This File): Your _Technical Setup Guide_. Use this first to install tools, configure Firebase/Stripe, and get the app running.
+2.  **[docs/launch_guide.md](docs/launch_guide.md)**: Your _Strategy & Strategy_. Read this for "vibe coding" best practices, AI prompt engineering, and a high-level overview of how to build features.
+3.  **[docs/roadmap.md](docs/roadmap.md)**: Your _Master Checklist_. Use this as a living document to track your progress from idea to launch. It breaks down the entire process into actionable boxes to check off.
 
 **Suggested Workflow:**
 Complete the setup in this file -> Read the Strategy Guide -> Execute using the Roadmap.
 
 **Other Helper Docs:**
 
-- **`docs/data_schema.md`**: Reference for your database structure (if you are enabling Firebase).
-- **`docs/function_map.md`**: Quick lookup for key functions and API endpoints (Don't worry about this too much if you're a beginner!).
+- **[docs/data_schema.md](docs/data_schema.md)**: Reference for your database structure (if you are enabling Firebase).
+- **[docs/function_map.md](docs/function_map.md)**: Quick lookup for key functions and API endpoints (Don't worry about this too much if you're a beginner!).
 
 ---
 
