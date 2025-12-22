@@ -5,7 +5,7 @@
 > 1.  🧠 **Strategy**: Read [`docs/launch_guide.md`](launch_guide.md) for high-level advice ("vibe coding"), prompt engineering, and product management tips.
 > 2.  🛠 **Setup**: Follow [`_START-HERE.md`](../_START-HERE.md) first to configure your project environment, and database, payment system and any other services you plan to use.
 > 3.  ✅ **Execution**: Use **this document** as your master checklist to track concrete progress from idea to launch.
-> 4.  🚀 **Using AI**: While this roadmap can look technical, you can use the AI chatbot to help you every step of the way. Remember if you are just building simple app or prototype where everythign doesn't need to work perfectly you can skip a lot of things from Phase 3 onward. 
+> 4.  🚀 **Using AI**: While this roadmap can look technical, you can use the AI chatbot to help you every step of the way. Remember if you are just building simple app or prototype where everythign doesn't need to work perfectly you can skip a lot of things from Phase 3 onward.
 
 —
 
@@ -35,9 +35,9 @@ _Make it look like YOUR product._
 
 —
 
-*NOTE: The following steps get more advanced. Not all these features or requests will be relevant to your app. If you followed the launch guide [`docs/launch_guide.md`](launch_guide.md) it will help the AI determine what you need to do next. Don't forget you can ask the AI for help along the way!*
+_NOTE: The following steps get more advanced. Not all these features or requests will be relevant to your app. If you followed the launch guide [`docs/launch_guide.md`](launch_guide.md) it will help the AI determine what you need to do next. Don't forget you can ask the AI for help along the way!_
 
-— 
+—
 
 ## Phase 3: Building the MVP (Core Features)
 
@@ -49,7 +49,7 @@ _The meat and potatoes of your application._
 - [ ] **User Dashboard**: Customize you user account page to show relevant user data.
 - [ ] **Permissions**: Ensure users can only read/write their own data.
 
-*Confused? If you want to  learn ask the AI to "Explain what this means" or "What does this do?" ...Or just ask it to do it and don't worry about it!*
+_Confused? If you want to learn ask the AI to "Explain what this means" or "What does this do?" ...Or just ask it to do it and don't worry about it!_
 
 —
 

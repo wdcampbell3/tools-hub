@@ -2,7 +2,7 @@
 
 This boilerplate kit is designed to give you a massive head start on your next SaaS project. We’ve handled the boring stuff and selected the best, most robust tech stack so you can focus on building what makes your app unique.
 
-— 
+—
 
 ## What's Included?
 
@@ -18,7 +18,7 @@ _Everything you need to launch:_
 - **Site Search**: Instant, zero-latency search for your content.
 - **Contact Form**: Integrated request handling to capture leads.
 
-*Everything is just a prompt away!*
+_Everything is just a prompt away!_
 
 –
 
@@ -28,7 +28,7 @@ _More reasons to love it:_
 - **Extensible**: A solid foundation that grows with you. Add new pages, components, and endpoints easily.
 - **MIT Open Source**: 100% free to use and modify. It's yours to edit and use however you want.
 
-— 
+—
 
 ## Tech Stack
 
@@ -40,9 +40,9 @@ _We picked a modern, robust, industry-standard secure stack that scales from day
 - **Payments**: Stripe (The gold standard for SaaS billing)
 - **Hosting**: Netlify (Recommended for easiest deployment)
 
-*...If you don't know what that means, don't worry about it... It's good stuff!*
+_...If you don't know what that means, don't worry about it... It's good stuff!_
 
-— 
+—
 
 ## Quick Start Guide
 
@@ -56,7 +56,7 @@ For anything beyond basic tweaks it's good practice to reference the `_AI-CONTEX
 - The file contains the "brain" of the project: architecture rules, tech stack details, and coding conventions.
 - Giving this context helps the AI write perfect code for _this_ specific project and avoids outdated patterns.
 
-— 
+—
 
 ### 2. Understand the Documentation Ecosystem 🗺️
 
@@ -97,7 +97,7 @@ _Important for branding and personalization!_
 2. Navigate to [`/styles`](http://localhost:5173/styles) in your browser.
 3. You can edit the color palette for both **Light** and **Dark** modes to ensure both look great, with changes previewed in real-time.
 4. Click **Save** to instantly update your app's global styles and choose what you want the default mode to be.
-**TIP: Mess something up? You can Use **Restore Defaults** if you ever need to reset to the original look.**
+   **TIP: Mess something up? You can Use **Restore Defaults** if you ever need to reset to the original look.**
 
 —
 
@@ -135,7 +135,9 @@ _Required for user auth, billing, and data persistence across computers._
 —
 
 ### 2. Set up User Authentication
+
 Once you've configured Firebase (step 1 above), auth is auto-magically handled.
+
 - **Login/Signup**: Visit `/login` or `/signup` to test it out.
 - **Protected Routes**: Any route in `src/routes/(admin)` requires login.
 - **Session Management**: We use secure server-side cookies, not client-side JWTs.
@@ -143,7 +145,9 @@ Once you've configured Firebase (step 1 above), auth is auto-magically handled.
 —
 
 ### 3. Set up the Blog Engine
+
 The blog is pre-configured for SEO and Markdown support.
+
 - **Location**: Blog posts live in `src/routes/(marketing)/blog/posts/`.
 - **How to Post**: Simply add a new `.md` file to that folder. The filename becomes the URL (slug).
 - **Frontmatter**: Ensure your markdown file starts with metadata like `title`, `date`, `author`, `description`, and `coverImage`.
@@ -183,7 +187,7 @@ _Time to go live!_
 1. Create A GitHub account if you don't already have one, then create a new repo and just ask the AI to push the code to the repo by providing its URL.
 2. Log in to [Netlify](https://www.netlify.com) with your GitHub login for the easiest set up.
 3. Click "Add new project" → "Import an existing project" → "GitHub"
-4. Select your repo. *NOTE: In "Build settings", the defaults usually work (Base directory: `/`, Build command: `npm run build`, Publish directory: `build` or `public`). SvelteKit's adapter-auto handles this.*
+4. Select your repo. _NOTE: In "Build settings", the defaults usually work (Base directory: `/`, Build command: `npm run build`, Publish directory: `build` or `public`). SvelteKit's adapter-auto handles this._
 5. **Crucial**: Add your final local environment variables to Netlify (Site configuration → Environment variables). NOTE: you can bulk copy the values from your `.env.local` file and paste them into Netlify. Just remove any comments and keep the key-value pairs. IMPORTANT: After importing make sure to manually check the "Secret values" box for all PRIVATE variables.
 
 —
@@ -193,7 +197,7 @@ _Time to go live!_
 Now that you're set up, it's time to build!
 
 - **Strategy**: Read **[`docs/launch_guide.md`](docs/launch_guide.md)** next. It's essential for first-time builders to understand how to "vibe code" effectively with AI if they want to build a robustSaaS app.
-- **Execution**: Use **[`docs/roadmap.md`](docs/roadmap.md)** as your interactive checklist. Mark items off as you go to track your journey from idea to launch. This is a PRO MOVE! 
+- **Execution**: Use **[`docs/roadmap.md`](docs/roadmap.md)** as your interactive checklist. Mark items off as you go to track your journey from idea to launch. This is a PRO MOVE!
 
 —
 
