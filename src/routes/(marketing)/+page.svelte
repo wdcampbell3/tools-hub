@@ -216,7 +216,7 @@
         >
         and
         <a
-          href="https://cursor.com/"
+          href="https://cursor.com/home"
           target="_blank"
           class="text-base-content underline">Cursor</a
         > to launch quality web apps quickly.
