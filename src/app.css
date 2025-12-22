@@ -15,7 +15,7 @@
 
   --color-primary: #066ab1;
   --color-primary-content: #001a1f;
-  --color-secondary: #cfcfcf;
+  --color-secondary: #a6a6a6;
   --color-secondary-content: #ffffff;
   --color-accent: #4cdaf6;
   --color-accent-content: #ffffff;
@@ -41,7 +41,7 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-  --main-link-color: var(--color-primary);
+  --main-link-color: inherit;
 }
 
 @plugin "daisyui/theme" {
@@ -78,7 +78,7 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-  --main-link-color: var(--color-primary);
+  --main-link-color: inherit;
 }
 
 /*

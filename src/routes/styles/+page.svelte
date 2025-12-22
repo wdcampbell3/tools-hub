@@ -510,7 +510,7 @@
             <button
               class="join-item btn btn-xs {defaultLinkIsPrimary
                 ? 'btn-ghost opacity-50'
-                : 'btn-primary'}"
+                : 'btn-primary text-white'}"
               onclick={() => {
                 if (defaultLinkIsPrimary) toggleDefaultLinkColor()
               }}
@@ -519,7 +519,7 @@
             </button>
             <button
               class="join-item btn btn-xs {defaultLinkIsPrimary
-                ? 'btn-primary'
+                ? 'btn-primary text-white'
                 : 'btn-ghost opacity-50'}"
               onclick={() => {
                 if (!defaultLinkIsPrimary) toggleDefaultLinkColor()
@@ -602,8 +602,8 @@
         <div class="space-y-2">
           <p class="text-sm font-bold opacity-50 mb-2">Variants</p>
           <div class="flex flex-wrap gap-3">
-            <button class="btn btn-primary">Primary</button>
-            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-primary text-white">Primary</button>
+            <button class="btn btn-secondary text-white">Secondary</button>
             <button class="btn btn-accent">Accent</button>
             <button class="btn btn-neutral">Neutral</button>
             <button class="btn">Default</button>
@@ -617,7 +617,7 @@
             <button class="btn btn-ghost">Ghost</button>
             <button class="btn btn-link">Link</button>
             <button class="btn btn-primary" disabled>Disabled</button>
-            <button class="btn btn-primary"
+            <button class="btn btn-primary text-white"
               ><span class="loading loading-spinner loading-xs"></span> Loading</button
             >
           </div>
@@ -690,7 +690,7 @@
         </div>
 
         <div
-          class="flex flex-wrap gap-8 p-4 bg-base-200 rounded-box border border-base-content/10"
+          class="flex flex-wrap gap-8 p-4 bg-base-200 rounded-box border border-base-content/10 items-center"
         >
           <div class="form-control">
             <label class="label cursor-pointer justify-start gap-3">
@@ -718,6 +718,21 @@
               <input type="checkbox" class="toggle toggle-primary" checked />
               <span class="label-text">Toggle</span>
             </label>
+          </div>
+          <div class="form-control">
+            <div class="label cursor-pointer justify-start gap-3">
+              <div
+                class="join bg-base-100 p-1 rounded-lg border border-base-content/10"
+              >
+                <button class="join-item btn btn-xs btn-primary text-white"
+                  >Option A</button
+                >
+                <button class="join-item btn btn-xs btn-ghost opacity-50"
+                  >Option B</button
+                >
+              </div>
+              <span class="label-text">Text Toggle</span>
+            </div>
           </div>
         </div>
       </div>
@@ -797,10 +812,10 @@
 
       <div class="flex flex-col gap-8">
         <div class="flex gap-2 flex-wrap">
-          <div class="badge badge-primary badge-lg">Primary</div>
-          <div class="badge badge-secondary badge-lg">Secondary</div>
+          <div class="badge badge-primary badge-lg text-white">Primary</div>
+          <div class="badge badge-secondary badge-lg text-white">Secondary</div>
           <div class="badge badge-accent badge-lg">Accent</div>
-          <div class="badge badge-outline badge-lg">Outline</div>
+          <div class="badge badge-outline badge-lg border-2">Outline</div>
           <div class="badge badge-ghost badge-lg">Ghost</div>
         </div>
 
@@ -813,7 +828,9 @@
             </p>
             <div class="card-actions justify-end mt-4">
               <button class="btn btn-ghost btn-sm">Cancel</button>
-              <button class="btn btn-primary btn-sm">Confirm Action</button>
+              <button class="btn btn-primary btn-sm text-white"
+                >Confirm Action</button
+              >
             </div>
           </div>
         </div>

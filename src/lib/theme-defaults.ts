@@ -20,12 +20,12 @@ export const DEFAULT_THEME = {
     "--color-warning-content": "#ffffff",
     "--color-error": "#e82f21",
     "--color-error-content": "#ffffff",
-    "--main-link-color": "var(--color-primary)",
+    "--main-link-color": "inherit",
   },
   dark: {
     "--color-primary": "#066ab1",
     "--color-primary-content": "#001a1f",
-    "--color-secondary": "#cfcfcf",
+    "--color-secondary": "#a6a6a6",
     "--color-secondary-content": "#ffffff",
     "--color-accent": "#4cdaf6",
     "--color-accent-content": "#ffffff",
@@ -43,6 +43,6 @@ export const DEFAULT_THEME = {
     "--color-warning-content": "#ffffff",
     "--color-error": "#e82f21",
     "--color-error-content": "#ffffff",
-    "--main-link-color": "var(--color-primary)",
+    "--main-link-color": "inherit",
   },
 }
