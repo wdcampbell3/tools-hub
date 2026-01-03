@@ -82,7 +82,7 @@ _Taking the first steps toward vibe coding_
 
 1. Create a new folder for your project.
 2. Open it in your code editor of choice.
-3. Ask your AI to "Clone the repo from https://github.com/wdcampbell3/Freshbase-SAAS-Kit".
+3. Ask your AI to "Clone the repo from https://github.com/wdcampbell3/Freshbase-SAAS-Kit directly into this current folder".
 4. Let it install any dependencies or other things it requests.
 5. Ask it to "Run the dev server" AKA `npm run dev`.
 6. Open [`localhost:5173`](http://localhost:5173) to see your new app preview!
