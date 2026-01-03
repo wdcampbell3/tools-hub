@@ -186,7 +186,28 @@ _Ready to make money?_
 
 —
 
-### 6. Deploy to Netlify
+### 6. Set up Google Analytics (Optional)
+
+_Track your users and understand how they interact with your app._
+
+**The app works perfectly without Google Analytics configured**—this is completely optional!
+
+If you want to track visitors and user behavior:
+
+1. Create a free account at [Google Analytics](https://analytics.google.com).
+2. Set up a new property for your website.
+3. Get your **Measurement ID** (starts with `G-` for GA4).
+4. Add it to your `.env.local` file:
+   ```
+   PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+   ```
+5. Restart your dev server for the changes to take effect.
+
+**Note**: The Google Analytics script will only load if this environment variable is set, so the app works out of the box without it.
+
+—
+
+### 7. Deploy to Netlify
 
 _Time to go live!_
 
@@ -213,7 +234,7 @@ Problem: "Page not found" after adding a route
 Solution: Check file is named `+page.svelte` (not `.ts`)
 
 Problem: Firebase initialization warning on startup
-Solution: This is expected if you haven't configured Firebase yet (see Step 6 above). The app will continue running with auth/database features disabled. To fix: add valid Firebase credentials to `.env.local` and restart the dev server.
+Solution: This is expected if you haven't configured Firebase yet (see "Set up Firebase" in the "Activating the OPTIONAL Advanced Features" section above). The app will continue running with auth/database features disabled. To fix: add valid Firebase credentials to `.env.local` and restart the dev server.
 
 Problem: Firebase permission denied
 Solution: Verify Firestore rules in Firebase Console match your query

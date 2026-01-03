@@ -69,7 +69,7 @@ if (!building && !isTestEnv) {
     console.warn("   Pages that don't require auth/database will still work!")
     console.warn("")
     console.warn("🔧 To fix this:")
-    console.warn("   1. Follow the Firebase setup in _START-HERE.md (Step 6)")
+    console.warn("   1. Follow the Firebase setup in _START-HERE.md (see 'Set up Firebase' section)")
     console.warn("   2. Ensure .env.local has valid PRIVATE_FIREBASE_* values")
     console.warn("   3. Restart the dev server after updating .env.local")
     console.warn("=".repeat(70) + "\n")

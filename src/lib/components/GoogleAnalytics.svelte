@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { PUBLIC_GOOGLE_ANALYTICS_ID } from "$env/static/public"
-
-  const gaId = PUBLIC_GOOGLE_ANALYTICS_ID
+  // Use import.meta.env which has a fallback to empty string in vite.config.ts
+  // This allows the app to work out of the box without requiring the env variable
+  const gaId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID || ""
 </script>
 
 <svelte:head>
