@@ -21,4 +21,10 @@ export default defineConfig({
     include: ["src/**/*.{test,spec}.{js,ts}"],
     globals: true, /// allows to skip import of test functions like `describe`, `it`, `expect`, etc.
   },
+  define: {
+    // Provide default empty values for optional environment variables
+    "import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID": JSON.stringify(
+      process.env.PUBLIC_GOOGLE_ANALYTICS_ID || ""
+    ),
+  },
 })
