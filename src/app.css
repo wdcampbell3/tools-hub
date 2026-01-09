@@ -13,7 +13,7 @@
   prefersdark: true;
   color-scheme: dark;
 
-  --color-primary: #f129ff;
+  --color-primary: #29e6ff;
   --color-primary-content: #001a1f;
   --color-secondary: #a6a6a6;
   --color-secondary-content: #ffffff;
@@ -50,7 +50,7 @@
   prefersdark: false;
   color-scheme: light;
 
-  --color-primary: #f129ff;
+  --color-primary: #ff2929;
   --color-primary-content: #ffffff;
   --color-secondary: #cfcfcf;
   --color-secondary-content: #000000;

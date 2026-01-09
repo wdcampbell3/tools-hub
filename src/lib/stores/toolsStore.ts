@@ -13,6 +13,12 @@ export const tools: Tool[] = [
     name: 'Calculator',
     icon: '🧮',
     description: 'Simple calculator for basic arithmetic operations'
+  },
+  {
+    id: 'converter',
+    name: 'Unit Converter',
+    icon: '⚖️',
+    description: 'Convert between varying metric and imperial units'
   }
   // Add more tools here as needed
 ];
