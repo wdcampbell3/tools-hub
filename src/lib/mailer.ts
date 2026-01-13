@@ -62,7 +62,9 @@ export const sendUserEmail = async ({
 
   // Check if the user email is verified using Firebase Admin
   if (!adminAuth) {
-    console.log("Firebase Admin not initialized. Skipping email verification check.")
+    console.log(
+      "Firebase Admin not initialized. Skipping email verification check.",
+    )
     return
   }
   try {

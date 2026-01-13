@@ -115,6 +115,7 @@ _For more basic apps and prototyping, you may not need the database or other adv
 **Does that sounds like you? If so, you can skip steps 6-9 entirely!** Jump straight to **Next Steps** at the bottom of this file and start building.
 
 **The app gracefully handles missing Firebase credentials:**
+
 - Pages that don't require auth/database work perfectly without Firebase configured
 - If Firebase credentials are missing or invalid, you'll see a helpful warning in the console explaining the issue
 - The app won't crash—it continues running with auth/database features disabled

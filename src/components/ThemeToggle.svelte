@@ -36,7 +36,7 @@
   }
 </script>
 
-<div class="fixed top-4 right-4 z-50">
+<div class="fixed bottom-4 right-4 z-50">
   <label
     class="swap swap-rotate btn btn-circle btn-ghost bg-base-100/10 backdrop-blur-[2px] shadow-lg hover:bg-base-100/20 border border-white/10"
   >

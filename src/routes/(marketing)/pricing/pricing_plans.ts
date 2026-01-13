@@ -4,15 +4,17 @@ export const pricingPlans = [
   {
     id: "hourly_consulting",
     name: "Hourly Consulting",
-    description: "A simple hourly consulting plan. You will be charged for the time spent on your project.",
+    description:
+      "A simple hourly consulting plan. You will be charged for the time spent on your project.",
     price: "$150",
     priceIntervalName: "per hour",
     stripe_price_id: "price_1PEEn3D1EvflrzvO0Dz4UUX3",
     stripe_product_id: "prod_Q4NYjoR7z8enyg",
     features: [
-      "1 hour of consulting", 
-      "Zoom or Google Meet call", 
-      "Recording of the call"],
+      "1 hour of consulting",
+      "Zoom or Google Meet call",
+      "Recording of the call",
+    ],
   },
   {
     id: "consulting_downpayment",

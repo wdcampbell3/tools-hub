@@ -1,88 +1,89 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  import { onMount } from "svelte"
 
-  let connectionStatus = $state<any>(null);
-  let uploadResult = $state<any>(null);
-  let loading = $state(false);
-  let selectedFile = $state<File | null>(null);
-  let previewUrl = $state<string>('');
+  let connectionStatus = $state<any>(null)
+  let uploadResult = $state<any>(null)
+  let loading = $state(false)
+  let selectedFile = $state<File | null>(null)
+  let previewUrl = $state<string>("")
 
   async function testConnection() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-cloudinary');
-      connectionStatus = await response.json();
+      const response = await fetch("/api/test-cloudinary")
+      connectionStatus = await response.json()
     } catch (error) {
-      connectionStatus = { success: false, error: String(error) };
+      connectionStatus = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function testUpload() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-cloudinary', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'test-upload' })
-      });
-      uploadResult = await response.json();
+      const response = await fetch("/api/test-cloudinary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "test-upload" }),
+      })
+      uploadResult = await response.json()
     } catch (error) {
-      uploadResult = { success: false, error: String(error) };
+      uploadResult = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   function handleFileSelect(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const file = target.files?.[0];
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
     if (file) {
-      selectedFile = file;
-      const reader = new FileReader();
+      selectedFile = file
+      const reader = new FileReader()
       reader.onload = (e) => {
-        previewUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+        previewUrl = e.target?.result as string
+      }
+      reader.readAsDataURL(file)
     }
   }
 
   async function uploadCustomImage() {
     if (!selectedFile) {
-      alert('Please select a file first');
-      return;
+      alert("Please select a file first")
+      return
     }
 
-    loading = true;
-    uploadResult = null;
+    loading = true
+    uploadResult = null
 
     try {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = async (e) => {
-        const base64 = e.target?.result as string;
+        const base64 = e.target?.result as string
 
-        const response = await fetch('/api/test-cloudinary', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/test-cloudinary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            action: 'upload-custom',
+            action: "upload-custom",
             file: base64,
-            filename: selectedFile!.name
-          })
-        });
+            filename: selectedFile!.name,
+          }),
+        })
 
-        uploadResult = await response.json();
-        loading = false;
-      };
-      reader.readAsDataURL(selectedFile);
+        uploadResult = await response.json()
+        loading = false
+      }
+      reader.readAsDataURL(selectedFile)
     } catch (error) {
-      uploadResult = { success: false, error: String(error) };
-      loading = false;
+      uploadResult = { success: false, error: String(error) }
+      loading = false
     }
   }
 
   onMount(() => {
-    testConnection();
-  });
+    testConnection()
+  })
 </script>
 
 <div class="container mx-auto p-8 max-w-4xl">
@@ -98,11 +99,15 @@
         onclick={testConnection}
         disabled={loading}
       >
-        {loading ? 'Testing...' : 'Test Connection'}
+        {loading ? "Testing..." : "Test Connection"}
       </button>
 
       {#if connectionStatus}
-        <div class="mt-4 p-4 rounded-lg {connectionStatus.success ? 'bg-success/20' : 'bg-error/20'}">
+        <div
+          class="mt-4 p-4 rounded-lg {connectionStatus.success
+            ? 'bg-success/20'
+            : 'bg-error/20'}"
+        >
           <div class="flex items-center gap-2 mb-2">
             {#if connectionStatus.success}
               <span class="text-2xl">✓</span>
@@ -112,7 +117,11 @@
               <span class="font-bold text-error">Connection Failed</span>
             {/if}
           </div>
-          <pre class="text-sm overflow-auto mt-2">{JSON.stringify(connectionStatus, null, 2)}</pre>
+          <pre class="text-sm overflow-auto mt-2">{JSON.stringify(
+              connectionStatus,
+              null,
+              2,
+            )}</pre>
         </div>
       {/if}
     </div>
@@ -126,16 +135,16 @@
         This will upload a tiny test image and immediately delete it
       </p>
 
-      <button
-        class="btn btn-success"
-        onclick={testUpload}
-        disabled={loading}
-      >
-        {loading ? 'Testing...' : 'Test Upload & Delete'}
+      <button class="btn btn-success" onclick={testUpload} disabled={loading}>
+        {loading ? "Testing..." : "Test Upload & Delete"}
       </button>
 
       {#if uploadResult}
-        <div class="mt-4 p-4 rounded-lg {uploadResult.success ? 'bg-success/20' : 'bg-error/20'}">
+        <div
+          class="mt-4 p-4 rounded-lg {uploadResult.success
+            ? 'bg-success/20'
+            : 'bg-error/20'}"
+        >
           {#if uploadResult.success}
             <div class="flex items-center gap-2 mb-2">
               <span class="text-2xl">✓</span>
@@ -159,7 +168,11 @@
               <span class="font-bold text-error">Upload Failed</span>
             </div>
           {/if}
-          <pre class="text-sm overflow-auto mt-2">{JSON.stringify(uploadResult, null, 2)}</pre>
+          <pre class="text-sm overflow-auto mt-2">{JSON.stringify(
+              uploadResult,
+              null,
+              2,
+            )}</pre>
         </div>
       {/if}
     </div>
@@ -171,10 +184,11 @@
       <h2 class="card-title">Upload Custom Image</h2>
 
       <div class="form-control">
-        <label class="label">
+        <label class="label" for="file-upload">
           <span class="label-text">Select an image file</span>
         </label>
         <input
+          id="file-upload"
           type="file"
           accept="image/*"
           class="file-input file-input-bordered"
@@ -198,20 +212,32 @@
         onclick={uploadCustomImage}
         disabled={loading || !selectedFile}
       >
-        {loading ? 'Uploading...' : 'Upload to Cloudinary'}
+        {loading ? "Uploading..." : "Upload to Cloudinary"}
       </button>
     </div>
   </div>
 
   <!-- Summary -->
   <div class="alert alert-info">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      class="stroke-current shrink-0 w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      ></path>
     </svg>
     <div>
       <h3 class="font-bold">Cloudinary Test Summary</h3>
       <ul class="list-disc list-inside text-sm mt-2">
-        <li>Connection test verifies API credentials and lists existing resources</li>
+        <li>
+          Connection test verifies API credentials and lists existing resources
+        </li>
         <li>Upload test creates and deletes a tiny test image</li>
         <li>Custom upload lets you test with your own images</li>
       </ul>

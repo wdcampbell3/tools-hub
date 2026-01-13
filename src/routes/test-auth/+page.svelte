@@ -1,77 +1,79 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  import { onMount } from "svelte"
 
-  let serverStatus = $state<any>(null);
-  let authTestResult = $state<any>(null);
-  let loading = $state(false);
-  let testEmail = $state('');
-  let testPassword = $state('');
-  let clientAuthStatus = $state<any>(null);
+  let authTestResult = $state<any>(null)
+  let loading = $state(false)
+  let testEmail = $state("")
+  let testPassword = $state("")
+  let clientAuthStatus = $state<any>(null)
 
   async function checkServerAuth() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-auth');
-      authTestResult = await response.json();
+      const response = await fetch("/api/test-auth")
+      authTestResult = await response.json()
     } catch (error) {
-      authTestResult = { success: false, error: String(error) };
+      authTestResult = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function createTestUser() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/test-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: 'create-test-user',
+          action: "create-test-user",
           email: testEmail || undefined,
-          password: testPassword || undefined
-        })
-      });
-      const result = await response.json();
-      authTestResult = result;
+          password: testPassword || undefined,
+        }),
+      })
+      const result = await response.json()
+      authTestResult = result
 
       if (result.success && result.credentials) {
-        testEmail = result.credentials.email;
-        testPassword = result.credentials.password;
+        testEmail = result.credentials.email
+        testPassword = result.credentials.password
       }
     } catch (error) {
-      authTestResult = { success: false, error: String(error) };
+      authTestResult = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function deleteTestUser() {
     if (!testEmail) {
-      alert('Please enter an email address');
-      return;
+      alert("Please enter an email address")
+      return
     }
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/test-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: 'delete-test-user',
-          email: testEmail
-        })
-      });
-      authTestResult = await response.json();
+          action: "delete-test-user",
+          email: testEmail,
+        }),
+      })
+      authTestResult = await response.json()
     } catch (error) {
-      authTestResult = { success: false, error: String(error) };
+      authTestResult = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function testClientAuth() {
-    loading = true;
+    loading = true
     try {
       // Dynamically import Firebase client SDK
-      const { initializeApp } = await import('firebase/app');
-      const { getAuth, signInWithEmailAndPassword, signOut } = await import('firebase/auth');
+      const { initializeApp } = await import("firebase/app")
+      const { getAuth, signInWithEmailAndPassword, signOut } = await import(
+        "firebase/auth"
+      )
 
       const firebaseConfig = {
         apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
@@ -80,46 +82,53 @@
         storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
         messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
         appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
-        measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID
-      };
+        measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
+      }
 
-      const app = initializeApp(firebaseConfig, 'test-app');
-      const auth = getAuth(app);
+      const app = initializeApp(firebaseConfig, "test-app")
+      const auth = getAuth(app)
 
       if (!testEmail || !testPassword) {
-        clientAuthStatus = { success: false, error: 'Please enter email and password' };
-        loading = false;
-        return;
+        clientAuthStatus = {
+          success: false,
+          error: "Please enter email and password",
+        }
+        loading = false
+        return
       }
 
       // Try to sign in
-      const userCredential = await signInWithEmailAndPassword(auth, testEmail, testPassword);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        testEmail,
+        testPassword,
+      )
 
       clientAuthStatus = {
         success: true,
-        message: 'Client-side authentication successful!',
+        message: "Client-side authentication successful!",
         user: {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
-          emailVerified: userCredential.user.emailVerified
-        }
-      };
+          emailVerified: userCredential.user.emailVerified,
+        },
+      }
 
       // Sign out
-      await signOut(auth);
+      await signOut(auth)
     } catch (error: any) {
       clientAuthStatus = {
         success: false,
         error: error.message || String(error),
-        code: error.code
-      };
+        code: error.code,
+      }
     }
-    loading = false;
+    loading = false
   }
 
   onMount(async () => {
-    await checkServerAuth();
-  });
+    await checkServerAuth()
+  })
 </script>
 
 <div class="container mx-auto p-8 max-w-4xl">
@@ -135,12 +144,16 @@
         onclick={checkServerAuth}
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'Check Server Auth Status'}
+        {loading ? "Loading..." : "Check Server Auth Status"}
       </button>
 
       {#if authTestResult}
         <div class="mt-4 p-4 bg-base-300 rounded-lg">
-          <pre class="text-sm overflow-auto">{JSON.stringify(authTestResult, null, 2)}</pre>
+          <pre class="text-sm overflow-auto">{JSON.stringify(
+              authTestResult,
+              null,
+              2,
+            )}</pre>
         </div>
       {/if}
     </div>
@@ -152,10 +165,13 @@
       <h2 class="card-title">Create Test User</h2>
 
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Email (optional - will auto-generate if empty)</span>
+        <label class="label" for="test-email">
+          <span class="label-text"
+            >Email (optional - will auto-generate if empty)</span
+          >
         </label>
         <input
+          id="test-email"
           type="email"
           placeholder="test@example.com"
           class="input input-bordered"
@@ -164,10 +180,13 @@
       </div>
 
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Password (optional - defaults to TestPassword123!)</span>
+        <label class="label" for="test-password">
+          <span class="label-text"
+            >Password (optional - defaults to TestPassword123!)</span
+          >
         </label>
         <input
+          id="test-password"
           type="password"
           placeholder="TestPassword123!"
           class="input input-bordered"
@@ -208,12 +227,20 @@
         onclick={testClientAuth}
         disabled={loading || !testEmail || !testPassword}
       >
-        {loading ? 'Testing...' : 'Test Client Sign In'}
+        {loading ? "Testing..." : "Test Client Sign In"}
       </button>
 
       {#if clientAuthStatus}
-        <div class="mt-4 p-4 rounded-lg {clientAuthStatus.success ? 'bg-success/20' : 'bg-error/20'}">
-          <pre class="text-sm overflow-auto">{JSON.stringify(clientAuthStatus, null, 2)}</pre>
+        <div
+          class="mt-4 p-4 rounded-lg {clientAuthStatus.success
+            ? 'bg-success/20'
+            : 'bg-error/20'}"
+        >
+          <pre class="text-sm overflow-auto">{JSON.stringify(
+              clientAuthStatus,
+              null,
+              2,
+            )}</pre>
         </div>
       {/if}
     </div>
@@ -221,8 +248,18 @@
 
   <!-- Instructions -->
   <div class="alert alert-info">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      class="stroke-current shrink-0 w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      ></path>
     </svg>
     <div>
       <h3 class="font-bold">Testing Steps:</h3>

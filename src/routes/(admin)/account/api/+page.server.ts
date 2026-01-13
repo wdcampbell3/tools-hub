@@ -57,7 +57,8 @@ export const actions = {
 
     if (!adminAuth) {
       return fail(500, {
-        errorMessage: "Firebase Admin not initialized. Please configure Firebase to use this feature.",
+        errorMessage:
+          "Firebase Admin not initialized. Please configure Firebase to use this feature.",
         email,
       })
     }
@@ -121,7 +122,8 @@ export const actions = {
 
     if (!adminAuth) {
       return fail(500, {
-        errorMessage: "Firebase Admin not initialized. Please configure Firebase to use this feature.",
+        errorMessage:
+          "Firebase Admin not initialized. Please configure Firebase to use this feature.",
         newPassword1,
         newPassword2,
       })
@@ -152,7 +154,8 @@ export const actions = {
 
     if (!adminAuth) {
       return fail(500, {
-        errorMessage: "Firebase Admin not initialized. Please configure Firebase to use this feature.",
+        errorMessage:
+          "Firebase Admin not initialized. Please configure Firebase to use this feature.",
       })
     }
 

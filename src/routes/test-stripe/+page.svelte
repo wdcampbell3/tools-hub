@@ -1,71 +1,72 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  import { onMount } from "svelte"
 
-  let connectionStatus = $state<any>(null);
-  let products = $state<any>(null);
-  let prices = $state<any>(null);
-  let customers = $state<any>(null);
-  let loading = $state(false);
+  let connectionStatus = $state<any>(null)
+  let products = $state<any>(null)
+  let prices = $state<any>(null)
+  let customers = $state<any>(null)
+  let loading = $state(false)
 
   async function testConnection() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-stripe');
-      connectionStatus = await response.json();
+      const response = await fetch("/api/test-stripe")
+      connectionStatus = await response.json()
     } catch (error) {
-      connectionStatus = { success: false, error: String(error) };
+      connectionStatus = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function listProducts() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-stripe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'list-products' })
-      });
-      products = await response.json();
+      const response = await fetch("/api/test-stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list-products" }),
+      })
+      products = await response.json()
     } catch (error) {
-      products = { success: false, error: String(error) };
+      products = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function listPrices() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-stripe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'list-prices' })
-      });
-      prices = await response.json();
+      const response = await fetch("/api/test-stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list-prices" }),
+      })
+      prices = await response.json()
     } catch (error) {
-      prices = { success: false, error: String(error) };
+      prices = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   async function listCustomers() {
-    loading = true;
+    loading = true
     try {
-      const response = await fetch('/api/test-stripe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'list-customers' })
-      });
-      customers = await response.json();
+      const response = await fetch("/api/test-stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list-customers" }),
+      })
+      customers = await response.json()
     } catch (error) {
-      customers = { success: false, error: String(error) };
+      customers = { success: false, error: String(error) }
     }
-    loading = false;
+    loading = false
   }
 
   onMount(() => {
-    testConnection();
-  });
+    testConnection()
+  })
 </script>
 
 <div class="container mx-auto p-8 max-w-6xl">
@@ -81,16 +82,20 @@
         onclick={testConnection}
         disabled={loading}
       >
-        {loading ? 'Testing...' : 'Test Connection'}
+        {loading ? "Testing..." : "Test Connection"}
       </button>
 
       {#if connectionStatus}
-        <div class="mt-4 p-4 rounded-lg {connectionStatus.success ? 'bg-success/20' : 'bg-error/20'}">
+        <div
+          class="mt-4 p-4 rounded-lg {connectionStatus.success
+            ? 'bg-success/20'
+            : 'bg-error/20'}"
+        >
           <div class="flex items-center gap-2 mb-2">
             {#if connectionStatus.success}
               <span class="text-2xl">✓</span>
               <span class="font-bold text-success">Connected!</span>
-              {#if connectionStatus.mode === 'LIVE'}
+              {#if connectionStatus.mode === "LIVE"}
                 <div class="badge badge-error">LIVE MODE</div>
               {:else}
                 <div class="badge badge-warning">TEST MODE</div>
@@ -114,7 +119,9 @@
                 </div>
                 <div>
                   <p class="text-sm font-semibold">Email:</p>
-                  <p class="text-sm">{connectionStatus.account.email || 'N/A'}</p>
+                  <p class="text-sm">
+                    {connectionStatus.account.email || "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p class="text-sm font-semibold">Country:</p>
@@ -125,13 +132,16 @@
                 <div>
                   <p class="text-sm font-semibold">Available Balance:</p>
                   <p class="text-sm">
-                    ${(connectionStatus.balance.available[0]?.amount || 0) / 100} {connectionStatus.balance.currency.toUpperCase()}
+                    ${(connectionStatus.balance.available[0]?.amount || 0) /
+                      100}
+                    {connectionStatus.balance.currency.toUpperCase()}
                   </p>
                 </div>
                 <div>
                   <p class="text-sm font-semibold">Pending Balance:</p>
                   <p class="text-sm">
-                    ${(connectionStatus.balance.pending[0]?.amount || 0) / 100} {connectionStatus.balance.currency.toUpperCase()}
+                    ${(connectionStatus.balance.pending[0]?.amount || 0) / 100}
+                    {connectionStatus.balance.currency.toUpperCase()}
                   </p>
                 </div>
               {/if}
@@ -139,8 +149,14 @@
           {/if}
 
           <details class="mt-4">
-            <summary class="cursor-pointer text-sm font-semibold">Raw Response</summary>
-            <pre class="text-xs overflow-auto mt-2">{JSON.stringify(connectionStatus, null, 2)}</pre>
+            <summary class="cursor-pointer text-sm font-semibold"
+              >Raw Response</summary
+            >
+            <pre class="text-xs overflow-auto mt-2">{JSON.stringify(
+                connectionStatus,
+                null,
+                2,
+              )}</pre>
           </details>
         </div>
       {/if}
@@ -152,18 +168,16 @@
     <div class="card-body">
       <h2 class="card-title">Products</h2>
 
-      <button
-        class="btn btn-primary"
-        onclick={listProducts}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'List Products'}
+      <button class="btn btn-primary" onclick={listProducts} disabled={loading}>
+        {loading ? "Loading..." : "List Products"}
       </button>
 
       {#if products}
         <div class="mt-4">
           {#if products.success}
-            <p class="font-semibold mb-2">Found {products.productCount} products:</p>
+            <p class="font-semibold mb-2">
+              Found {products.productCount} products:
+            </p>
             <div class="overflow-x-auto">
               <table class="table table-sm">
                 <thead>
@@ -178,13 +192,19 @@
                   {#each products.products as product}
                     <tr>
                       <td class="font-semibold">{product.name}</td>
-                      <td class="text-sm">{product.description || 'N/A'}</td>
+                      <td class="text-sm">{product.description || "N/A"}</td>
                       <td>
-                        <div class="badge {product.active ? 'badge-success' : 'badge-error'}">
-                          {product.active ? 'Active' : 'Inactive'}
+                        <div
+                          class="badge {product.active
+                            ? 'badge-success'
+                            : 'badge-error'}"
+                        >
+                          {product.active ? "Active" : "Inactive"}
                         </div>
                       </td>
-                      <td class="text-xs">{new Date(product.created).toLocaleDateString()}</td>
+                      <td class="text-xs"
+                        >{new Date(product.created).toLocaleDateString()}</td
+                      >
                     </tr>
                   {/each}
                 </tbody>
@@ -205,12 +225,8 @@
     <div class="card-body">
       <h2 class="card-title">Prices</h2>
 
-      <button
-        class="btn btn-primary"
-        onclick={listPrices}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'List Prices'}
+      <button class="btn btn-primary" onclick={listPrices} disabled={loading}>
+        {loading ? "Loading..." : "List Prices"}
       </button>
 
       {#if prices}
@@ -246,8 +262,12 @@
                       </td>
                       <td class="text-xs">{price.productId}</td>
                       <td>
-                        <div class="badge {price.active ? 'badge-success' : 'badge-error'}">
-                          {price.active ? 'Active' : 'Inactive'}
+                        <div
+                          class="badge {price.active
+                            ? 'badge-success'
+                            : 'badge-error'}"
+                        >
+                          {price.active ? "Active" : "Inactive"}
                         </div>
                       </td>
                     </tr>
@@ -275,13 +295,15 @@
         onclick={listCustomers}
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'List Customers'}
+        {loading ? "Loading..." : "List Customers"}
       </button>
 
       {#if customers}
         <div class="mt-4">
           {#if customers.success}
-            <p class="font-semibold mb-2">Found {customers.customerCount} customers:</p>
+            <p class="font-semibold mb-2">
+              Found {customers.customerCount} customers:
+            </p>
             <div class="overflow-x-auto">
               <table class="table table-sm">
                 <thead>
@@ -295,10 +317,12 @@
                 <tbody>
                   {#each customers.customers as customer}
                     <tr>
-                      <td class="font-semibold">{customer.name || 'N/A'}</td>
-                      <td>{customer.email || 'N/A'}</td>
+                      <td class="font-semibold">{customer.name || "N/A"}</td>
+                      <td>{customer.email || "N/A"}</td>
                       <td class="text-xs">{customer.id}</td>
-                      <td class="text-xs">{new Date(customer.created).toLocaleDateString()}</td>
+                      <td class="text-xs"
+                        >{new Date(customer.created).toLocaleDateString()}</td
+                      >
                     </tr>
                   {/each}
                 </tbody>
@@ -316,12 +340,26 @@
 
   <!-- Warning -->
   <div class="alert alert-warning">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      class="stroke-current shrink-0 w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      ></path>
     </svg>
     <div>
       <h3 class="font-bold">LIVE MODE WARNING</h3>
-      <p class="text-sm">You are using a LIVE Stripe API key. Real transactions can be processed. For testing, consider using a TEST mode API key (starts with sk_test_ or rk_test_).</p>
+      <p class="text-sm">
+        You are using a LIVE Stripe API key. Real transactions can be processed.
+        For testing, consider using a TEST mode API key (starts with sk_test_ or
+        rk_test_).
+      </p>
     </div>
   </div>
 </div>

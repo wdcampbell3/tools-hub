@@ -24,7 +24,7 @@ export default defineConfig({
   define: {
     // Provide default empty values for optional environment variables
     "import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID": JSON.stringify(
-      process.env.PUBLIC_GOOGLE_ANALYTICS_ID || ""
+      process.env.PUBLIC_GOOGLE_ANALYTICS_ID || "",
     ),
   },
 })

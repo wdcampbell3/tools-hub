@@ -1,26 +1,32 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store"
 
 export interface Tool {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
+  id: string
+  name: string
+  icon: string
+  description: string
 }
 
 export const tools: Tool[] = [
   {
-    id: 'calculator',
-    name: 'Calculator',
-    icon: '🧮',
-    description: 'Simple calculator for basic arithmetic operations'
+    id: "calculator",
+    name: "Calculator",
+    icon: "🧮",
+    description: "Simple calculator for basic arithmetic operations",
   },
   {
-    id: 'converter',
-    name: 'Unit Converter',
-    icon: '⚖️',
-    description: 'Convert between varying metric and imperial units'
-  }
+    id: "converter",
+    name: "Unit Converter",
+    icon: "⚖️",
+    description: "Convert between varying metric and imperial units",
+  },
+  {
+    id: "signature",
+    name: "Gmail Signature Maker",
+    icon: "✉️",
+    description: "Create professional email signatures with custom templates",
+  },
   // Add more tools here as needed
-];
+]
 
-export const selectedTool = writable<string>('calculator');
+export const selectedTool = writable<string>("calculator")

@@ -1,8 +1,5 @@
 // Firestore service helpers
-import {
-  adminDb,
-  isFirebaseAdminInitialized,
-} from "./firebase-admin.server"
+import { adminDb, isFirebaseAdminInitialized } from "./firebase-admin.server"
 import type { DecodedIdToken } from "firebase-admin/auth"
 
 // Collection names
