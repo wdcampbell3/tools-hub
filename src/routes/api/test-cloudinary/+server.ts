@@ -42,11 +42,7 @@ export const GET: RequestHandler = async () => {
     }
 
     // Test connection by making a simple API call to list resources
-    const timestamp = Math.floor(Date.now() / 1000)
-    const crypto = await import("crypto")
-
-    // Create signature for authenticated request
-    const stringToSign = `timestamp=${timestamp}${apiSecret}`
+    // crypto, timestamp, and signature not needed for Basic Auth based resource listing
 
     const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image`
     const response = await fetch(url, {
