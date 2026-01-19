@@ -20,7 +20,8 @@ const openai = new OpenAI({
 });
 const POST = async ({ request }) => {
   try {
-    const { message, model, meetingIds } = await request.json();
+    const requestParams = await request.json();
+    const { message, model, meetingIds } = requestParams;
     if (!message) {
       throw error(400, "Message is required");
     }
@@ -207,10 +208,15 @@ ${contextText}`;
       text: m.fullText,
       preview: m.fullText.substring(0, 300) + "..."
     }));
+    const history = (requestParams.history || []).map((m) => ({
+      role: m.role,
+      content: m.content
+    }));
     const response = await openai.chat.completions.create({
       model: selectedModel,
       messages: [
         { role: "system", content: systemPrompt },
+        ...history,
         { role: "user", content: message }
       ],
       stream: true,

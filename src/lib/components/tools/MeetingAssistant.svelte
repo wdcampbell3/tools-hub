@@ -46,6 +46,7 @@
   let showMeetingFilter = false
   let totalSessionCost = 0.0
   let filteredMeetingNames: string[] = []
+  let textareaElement: HTMLTextAreaElement
 
   // Reactive: Filter sources in side panel
   $: visibleSources =
@@ -309,6 +310,11 @@
     const content = messageInput
     messageInput = ""
 
+    // Reset textarea height
+    if (textareaElement) {
+      textareaElement.style.height = "auto"
+    }
+
     // Track the model used for this message to calculate price correctly later
     const currentModel = selectedModel
 
@@ -506,16 +512,31 @@
 
           currentSources = citedSources
 
-          messages = [
-            ...messages.slice(0, -1),
-            {
-              role: "assistant",
-              content: fullResponse,
-              sources: citedSources.length > 0 ? citedSources : undefined,
-              usage,
-              model: currentModel,
-            },
-          ]
+          // Check if last message is assistant (update it) or user (append new)
+          const lastMsg = messages[messages.length - 1]
+          if (lastMsg && lastMsg.role === "assistant") {
+            messages = [
+              ...messages.slice(0, -1),
+              {
+                role: "assistant",
+                content: fullResponse,
+                sources: citedSources.length > 0 ? citedSources : undefined,
+                usage,
+                model: currentModel,
+              },
+            ]
+          } else {
+            messages = [
+              ...messages,
+              {
+                role: "assistant",
+                content: fullResponse,
+                sources: citedSources.length > 0 ? citedSources : undefined,
+                usage,
+                model: currentModel,
+              },
+            ]
+          }
         }
       }
 
@@ -545,26 +566,19 @@
       })
 
       // Final cleanup update
-      messages = [
-        ...messages.slice(0, -1),
-        {
-          role: "assistant",
-          content: fullResponse.trim(),
-          sources: citedSources.length > 0 ? citedSources : sources, // Fallback to all if none matched?
-          // Wait, if none matched, maybe we shouldn't show any?
-          // The previous logic was "Fallback to all if none matched".
-          // But the user request implies they want specific filtering.
-          // I will keep the fallback ONLY if the final count is 0, to avoiding showing nothing
-          // if the AI failed to cite correctly but we retrieved docs.
-          // BUT, "sources should not show ... until mentioned". This suggests strictness.
-          // However, for the FINAL state, if the AI hallucinated/forgot citations,
-          // showing the retrieved context is helpful for debugging.
-          // I'll stick to the original behavior for the FINAL update: fallback to sources if 0 citations found.
-          // BUT for the loop, I used strict filtering.
-          usage: usage,
-          model: currentModel,
-        },
-      ]
+      const lastMsg = messages[messages.length - 1]
+      if (lastMsg && lastMsg.role === "assistant") {
+        messages = [
+          ...messages.slice(0, -1),
+          {
+            role: "assistant",
+            content: fullResponse.trim(),
+            sources: citedSources.length > 0 ? citedSources : sources,
+            usage: usage,
+            model: currentModel,
+          },
+        ]
+      }
 
       // Update currentSources with filtered list
       currentSources = citedSources.length > 0 ? citedSources : sources
@@ -776,9 +790,9 @@
   ></div>
 {/if}
 
-<div class="flex flex-col h-[100dvh] relative">
+<div class="flex flex-col lg:flex-row h-full relative overflow-hidden">
   <!-- Main Chat Area -->
-  <div class="flex-1 flex flex-col bg-base-100 min-w-0">
+  <div class="flex-1 flex flex-col bg-base-100 min-w-0 min-h-0">
     {#if messages.length > 0}
       <div
         class="h-14 border-b border-base-300 flex items-center gap-2 px-4 bg-base-100 flex-none z-10"
@@ -810,7 +824,7 @@
       </div>
     {/if}
     <!-- Chat Messages -->
-    <div class="flex-1 overflow-y-auto p-6" bind:this={chatContainer}>
+    <div class="flex-1 min-h-0 overflow-y-auto p-6" bind:this={chatContainer}>
       {#if messages.length === 0}
         <div class="h-full flex flex-col items-center justify-center">
           <!-- Meeting Filter -->
@@ -1004,11 +1018,13 @@
     </div>
 
     <!-- Input Area -->
-    <div class="border-t border-base-300 p-4 bg-base-100">
+    <div
+      class="border-t border-base-300 bg-base-100 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex-none z-20"
+    >
       <div class="max-w-3xl mx-auto">
         <div class="flex gap-2 items-end">
           <!-- Model Selector Dropdown -->
-          <div class="relative">
+          <div class="relative pb-1">
             <button
               class="btn btn-sm btn-ghost"
               onclick={() => (showModelDropdown = !showModelDropdown)}
@@ -1068,19 +1084,24 @@
             {/if}
           </div>
 
-          <!-- Message Input -->
-          <input
-            type="text"
-            class="input input-bordered flex-1"
+          <textarea
+            bind:this={textareaElement}
+            class="textarea textarea-bordered flex-1 min-h-[3rem] max-h-[200px] resize-none overflow-y-auto leading-normal py-3"
             placeholder="Ask"
             bind:value={messageInput}
             onkeydown={handleKeydown}
             disabled={loading}
-          />
+            rows="1"
+            oninput={(e) => {
+              const target = e.currentTarget
+              target.style.height = "auto"
+              target.style.height = target.scrollHeight + "px"
+            }}
+          ></textarea>
 
           <!-- Send Button -->
           <button
-            class="btn btn-primary btn-square"
+            class="btn btn-primary btn-square mb-0.5"
             onclick={sendMessage}
             disabled={loading || !messageInput.trim()}
             aria-label="Send message"
@@ -1308,31 +1329,6 @@
   {/if}
 
   <!-- Floating Sources Toggle Button (when closed, only show when there are messages) -->
-  {#if messages.length > 0 && !showSources && currentSources.length > 0}
-    <button
-      class="fixed bottom-24 right-4 z-40 btn btn-primary btn-circle shadow-lg lg:absolute lg:bottom-auto lg:top-4 lg:right-4"
-      onclick={() => (showSources = true)}
-      aria-label="Open sources panel"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-        />
-      </svg>
-      <span class="absolute -top-1 -right-1 badge badge-sm badge-secondary"
-        >{currentSources.length}</span
-      >
-    </button>
-  {/if}
 </div>
 
 <style>

@@ -164,14 +164,14 @@ function MeetingAssistant($$payload, $$props) {
   {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--> <div class="h-full flex gap-0 relative overflow-hidden"><div class="flex-1 flex flex-col bg-base-100 min-w-0">`;
+  $$payload.out += `<!--]--> <div class="flex flex-col lg:flex-row h-full relative overflow-hidden"><div class="flex-1 flex flex-col bg-base-100 min-w-0 min-h-0">`;
   if (messages.length > 0) {
     $$payload.out += "<!--[-->";
     $$payload.out += `<div class="h-14 border-b border-base-300 flex items-center gap-2 px-4 bg-base-100 flex-none z-10"><button class="btn btn-ghost btn-sm gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Back to Meetings</button></div>`;
   } else {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--> <div class="flex-1 overflow-y-auto p-6">`;
+  $$payload.out += `<!--]--> <div class="flex-1 min-h-0 overflow-y-auto p-6">`;
   if (messages.length === 0) {
     $$payload.out += "<!--[-->";
     const each_array_1 = ensure_array_like(conversationStarters);
@@ -227,11 +227,16 @@ function MeetingAssistant($$payload, $$props) {
   {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--></div> <div class="border-t border-base-300 p-4 bg-base-100"><div class="max-w-3xl mx-auto"><div class="flex gap-2 items-end"><div class="relative"><button class="btn btn-sm btn-ghost"${attr("title", getSelectedModelName())} aria-label="Toggle model dropdown"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg></button> `;
+  $$payload.out += `<!--]--></div> <div class="border-t border-base-300 bg-base-100 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex-none z-20"><div class="max-w-3xl mx-auto"><div class="flex gap-2 items-end"><div class="relative pb-1"><button class="btn btn-sm btn-ghost"${attr("title", getSelectedModelName())} aria-label="Toggle model dropdown"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg></button> `;
   {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--></div> <input type="text" class="input input-bordered flex-1" placeholder="Ask"${attr("value", messageInput)}${attr("disabled", loading, true)}> <button class="btn btn-primary btn-square"${attr("disabled", !messageInput.trim(), true)} aria-label="Send message"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button></div> <div class="flex justify-between items-center text-xs opacity-60 mt-2 px-1"><span>Currently selected: ${escape_html(getSelectedModelName())}</span> <span>Total used this session: $${escape_html(totalSessionCost.toFixed(4))}</span></div></div></div></div> `;
+  $$payload.out += `<!--]--></div> <textarea class="textarea textarea-bordered flex-1 min-h-[3rem] max-h-[200px] resize-none overflow-y-auto leading-normal py-3" placeholder="Ask"${attr("disabled", loading, true)} rows="1">`;
+  const $$body = escape_html(messageInput);
+  if ($$body) {
+    $$payload.out += `${$$body}`;
+  }
+  $$payload.out += `</textarea> <button class="btn btn-primary btn-square mb-0.5"${attr("disabled", !messageInput.trim(), true)} aria-label="Send message"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button></div> <div class="flex justify-between items-center text-xs opacity-60 mt-2 px-1"><span>Currently selected: ${escape_html(getSelectedModelName())}</span> <span>Total used this session: $${escape_html(totalSessionCost.toFixed(4))}</span></div></div></div></div> `;
   if (messages.length > 0) {
     $$payload.out += "<!--[-->";
     const each_array_4 = ensure_array_like(visibleSources);
@@ -298,13 +303,6 @@ function MeetingAssistant($$payload, $$props) {
   } else {
     $$payload.out += "<!--[!-->";
   }
-  $$payload.out += `<!--]--> `;
-  if (messages.length > 0 && true && currentSources.length > 0) {
-    $$payload.out += "<!--[-->";
-    $$payload.out += `<button class="fixed bottom-24 right-4 z-40 btn btn-primary btn-circle shadow-lg lg:absolute lg:bottom-auto lg:top-4 lg:right-4" aria-label="Open sources panel"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> <span class="absolute -top-1 -right-1 badge badge-sm badge-secondary">${escape_html(currentSources.length)}</span></button>`;
-  } else {
-    $$payload.out += "<!--[!-->";
-  }
   $$payload.out += `<!--]--></div>`;
   pop();
 }
@@ -312,7 +310,7 @@ function _page($$payload) {
   head($$payload, ($$payload2) => {
     $$payload2.title = `<title>Meeting Assistant | Dougie's Tool Hub</title>`;
   });
-  $$payload.out += `<div class="h-[calc(100vh-2rem)]">`;
+  $$payload.out += `<div class="h-full">`;
   MeetingAssistant($$payload);
   $$payload.out += `<!----></div>`;
 }
