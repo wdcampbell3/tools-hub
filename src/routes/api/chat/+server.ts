@@ -5,7 +5,8 @@ import type { RequestHandler } from "./$types"
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
-    const { message, model, meetingIds } = await request.json()
+    const requestParams = await request.json()
+    const { message, model, meetingIds } = requestParams
 
     if (!message) {
       throw error(400, "Message is required")
@@ -289,10 +290,18 @@ ${contextText}`
       preview: m.fullText.substring(0, 300) + "...",
     }))
 
+    // Parse history (if provided)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const history = (requestParams.history || []).map((m: any) => ({
+      role: m.role,
+      content: m.content,
+    }))
+
     const response = await openai.chat.completions.create({
       model: selectedModel,
       messages: [
         { role: "system", content: systemPrompt },
+        ...history,
         { role: "user", content: message },
       ],
       stream: true,

@@ -321,6 +321,9 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: content,
+          history: messages
+            .slice(0, -1)
+            .map((m) => ({ role: m.role, content: m.content })),
           model: selectedModel,
           meetingIds:
             selectedMeetingIds.length > 0 ? selectedMeetingIds : undefined,
@@ -363,7 +366,6 @@
 
           const chunk = decoder.decode(value, { stream: true })
 
-          // If we haven't processed sources yet, buffer everything
           if (!isSourcesProcessed) {
             buffer += chunk
 
@@ -373,18 +375,13 @@
 
             if (sourcesStartIndex !== -1 && sourcesEndIndex !== -1) {
               // Extract sources
-              const sourcesContent = buffer.substring(
-                sourcesStartIndex + "__SOURCES__".length,
-                sourcesEndIndex,
-              )
-
               try {
-                sources = JSON.parse(sourcesContent)
-                // Don't show sources immediately. Wait for citations.
-                // But we can auto-open the panel if we expect sources?
-                // User said "sources should not show in the list", so let's keep list empty initially.
+                const sJson = buffer.substring(
+                  sourcesStartIndex + "__SOURCES__".length,
+                  sourcesEndIndex,
+                )
+                sources = JSON.parse(sJson)
                 if (sources && sources.length > 0) {
-                  // We'll update currentSources dynamically in the loop
                   currentSources = []
                   selectedSourceId = null
                 }
@@ -392,48 +389,84 @@
                 console.error("Failed to parse sources:", e)
               }
 
-              // Remove sources block from buffer
-              // Everything before sources (unlikely) + everything after END_SOURCES
-              const preSources = buffer.substring(0, sourcesStartIndex)
-              const postSources = buffer.substring(
+              // Extract pre and post content
+              const pre = buffer.substring(0, sourcesStartIndex)
+              const post = buffer.substring(
                 sourcesEndIndex + "__END_SOURCES__".length,
               )
 
-              // The buffer now becomes the actual text content start
-              buffer = preSources + postSources // Clean buffer
-              fullResponse += buffer.trimStart() // Add to response
+              fullResponse += pre
+              buffer = post // Remaining content for text mode
               isSourcesProcessed = true
-              buffer = "" // Clear buffer to stream normally now
             } else if (
-              sourcesStartIndex === -1 &&
-              buffer.length > 500 &&
+              buffer.length > 1000 &&
               buffer.indexOf("__SOURCES__") === -1
             ) {
-              // Buffer safety logic...
+              // Safety: No sources found after 1000 chars, treat as text
+              fullResponse += buffer
+              buffer = ""
+              isSourcesProcessed = true
             }
           } else {
-            // Sources already processed OR we decided there are none
-            let cleanChunk = chunk
+            // Text mode
+            buffer += chunk
+          }
 
-            // Handle USAGE
-            if (cleanChunk.includes("__USAGE__")) {
-              const usageMatch = cleanChunk.match(
-                /__USAGE__([\s\S]*?)__END_USAGE__/,
-              )
-              if (usageMatch) {
-                try {
-                  usage = JSON.parse(usageMatch[1])
-                } catch (e) {
-                  console.error(e)
-                }
-                cleanChunk = cleanChunk.replace(
-                  /__USAGE__[\s\S]*?__END_USAGE__/,
-                  "",
+          if (isSourcesProcessed) {
+            // Check for Usage Block
+            const uStart = buffer.indexOf("__USAGE__")
+            const uEnd = buffer.indexOf("__END_USAGE__")
+
+            if (uStart !== -1 && uEnd !== -1) {
+              // Found complete usage
+              try {
+                const uJson = buffer.substring(
+                  uStart + "__USAGE__".length,
+                  uEnd,
                 )
+                usage = JSON.parse(uJson)
+              } catch (e) {
+                console.error("Failed usage parse", e)
+              }
+
+              // Commit text before usage
+              fullResponse += buffer.substring(0, uStart)
+
+              // Remove usage from buffer. Keep remainder (if any)
+              buffer = buffer.substring(uEnd + "__END_USAGE__".length)
+
+              // If remainder exists, commit it
+              if (buffer.length > 0) {
+                fullResponse += buffer
+                buffer = ""
+              }
+            } else {
+              // No complete usage found yet.
+              const tag = "__USAGE__"
+              let partialIdx = -1
+
+              // Check if buffer ends with partial tag
+              for (let i = 1; i < tag.length; i++) {
+                if (buffer.endsWith(tag.substring(0, i))) {
+                  partialIdx = buffer.length - i
+                  break
+                }
+              }
+
+              if (buffer.includes("__USAGE__")) {
+                partialIdx = buffer.indexOf("__USAGE__")
+              }
+
+              if (partialIdx !== -1) {
+                if (partialIdx > 0) {
+                  fullResponse += buffer.substring(0, partialIdx)
+                  buffer = buffer.substring(partialIdx)
+                }
+              } else {
+                fullResponse += buffer
+                buffer = ""
               }
             }
-
-            fullResponse += cleanChunk
           }
 
           // Live calculation of cited sources
@@ -441,8 +474,6 @@
           const citationRegex = /\[\[([^\]]+)\]\]/g
           let citationMatch
 
-          // Parse full match to find citations
-          // Note: This regex matches [[Citation]]
           while ((citationMatch = citationRegex.exec(fullResponse)) !== null) {
             citedKeys.add(citationMatch[1].trim())
           }
@@ -452,7 +483,6 @@
             const exactKey = `${s.meeting_name}, ${sourceDate}`
 
             return Array.from(citedKeys).some((citation) => {
-              // Clean potential extra brackets just in case
               const cleanCitation = citation.replace(/^\[+|\]+$/g, "").trim()
               if (cleanCitation === exactKey) return true
               if (
@@ -464,7 +494,7 @@
             })
           })
 
-          // Auto-open panel if we have cited sources and it's not open yet
+          // Auto-open panel logic
           if (
             citedSources.length > 0 &&
             !showSources &&
@@ -476,14 +506,13 @@
 
           currentSources = citedSources
 
-          // Live update
           messages = [
             ...messages.slice(0, -1),
             {
               role: "assistant",
               content: fullResponse,
-              sources: citedSources, // Only show cited
-              usage: usage,
+              sources: citedSources.length > 0 ? citedSources : undefined,
+              usage,
               model: currentModel,
             },
           ]
@@ -747,7 +776,7 @@
   ></div>
 {/if}
 
-<div class="h-full flex gap-0 relative overflow-hidden">
+<div class="flex flex-col h-[100dvh] relative">
   <!-- Main Chat Area -->
   <div class="flex-1 flex flex-col bg-base-100 min-w-0">
     {#if messages.length > 0}
@@ -1375,5 +1404,12 @@
   :global(.citation-link:hover::before) {
     opacity: 1;
     visibility: visible;
+  }
+
+  @media (max-width: 1024px) {
+    :global(.citation-link::after),
+    :global(.citation-link::before) {
+      display: none !important;
+    }
   }
 </style>
