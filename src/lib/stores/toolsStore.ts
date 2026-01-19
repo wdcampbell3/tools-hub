@@ -1,5 +1,3 @@
-import { writable } from "svelte/store"
-
 export interface Tool {
   id: string
   name: string
@@ -26,7 +24,11 @@ export const tools: Tool[] = [
     icon: "✉️",
     description: "Create professional email signatures with custom templates",
   },
+  {
+    id: "meeting-assistant",
+    name: "Meeting Assistant",
+    icon: "💬",
+    description: "Chat with your meeting transcripts using AI",
+  },
   // Add more tools here as needed
 ]
-
-export const selectedTool = writable<string>("calculator")

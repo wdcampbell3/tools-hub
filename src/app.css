@@ -41,7 +41,7 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-  --main-link-color: var(--color-primary);
+  --main-link-color: inherit;
 }
 
 @plugin "daisyui/theme" {
@@ -78,7 +78,7 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-  --main-link-color: var(--color-primary);
+  --main-link-color: inherit;
 }
 
 /*
@@ -97,6 +97,12 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-base-300, currentColor);
+  }
+
+  /* Ensure body follows theme background */
+  body {
+    background-color: var(--color-base-100);
+    color: var(--color-base-content);
   }
 }
 

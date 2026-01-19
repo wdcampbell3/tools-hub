@@ -1,65 +1,47 @@
 <script lang="ts">
-  import ToolsNav from "$lib/components/ToolsNav.svelte"
-  import Calculator from "$lib/components/tools/Calculator.svelte"
-  import Converter from "$lib/components/tools/Converter.svelte"
-  import SignatureMaker from "$lib/components/tools/SignatureMaker.svelte"
-  import { selectedTool } from "$lib/stores/toolsStore"
+  import { tools } from "$lib/stores/toolsStore"
 </script>
 
-<div class="drawer lg:drawer-open h-screen">
-  <input id="tools-drawer" type="checkbox" class="drawer-toggle" />
-
-  <!-- Main Content Area -->
-  <div class="drawer-content flex flex-col h-full overflow-hidden bg-base-100">
-    <!-- Mobile Header with Hamburger -->
-    <div
-      class="w-full navbar bg-base-100 lg:hidden border-b border-base-200 flex-shrink-0"
-    >
-      <div class="flex-none">
-        <label
-          for="tools-drawer"
-          aria-label="open sidebar"
-          class="btn btn-square btn-ghost"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            class="inline-block w-6 h-6 stroke-current"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path></svg
-          >
-        </label>
-      </div>
-      <div class="flex-1 px-2 mx-2 font-bold text-lg">Tools Hub</div>
-    </div>
-
-    <!-- Tool Content -->
-    <div class="flex-1 overflow-auto p-4 lg:p-0">
-      {#if $selectedTool === "calculator"}
-        <Calculator />
-      {:else if $selectedTool === "converter"}
-        <Converter />
-      {:else if $selectedTool === "signature"}
-        <SignatureMaker />
-      {:else}
-        <div class="flex items-center justify-center h-full">
-          <p class="text-base-content/50">Select a tool from the sidebar</p>
-        </div>
-      {/if}
-    </div>
+<div class="min-h-screen bg-base-100">
+  <!-- Hero Section -->
+  <div class="bg-primary text-primary-content py-20 px-4 text-center">
+    <h1 class="text-5xl font-bold mb-4">Dougie's Tool Hub</h1>
+    <p class="text-xl italic opacity-90 mb-8">
+      Vibe Coded—100% AI Chat-Prompted—Tool Experiments!
+    </p>
+    <p class="text-sm opacity-75">
+      This project is open source and great for beginners.
+    </p>
   </div>
 
-  <!-- Sidebar -->
-  <div class="drawer-side z-20">
-    <label for="tools-drawer" aria-label="close sidebar" class="drawer-overlay"
-    ></label>
-    <div class="h-full w-80 bg-base-200">
-      <ToolsNav />
+  <!-- Tools Grid -->
+  <div class="max-w-6xl mx-auto py-16 px-4">
+    <h2 class="text-4xl font-bold text-primary text-center mb-2">Our Tools</h2>
+    <p class="text-center text-base-content/60 mb-12">
+      Pick a tool... and start vibing!
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {#each tools as tool}
+        <a
+          href="/tools/{tool.id}"
+          class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group"
+        >
+          <figure
+            class="px-8 pt-8 pb-4 h-48 flex items-center justify-center bg-base-200/50 group-hover:bg-primary/5 transition-colors"
+          >
+            <span class="text-8xl">{tool.icon}</span>
+          </figure>
+          <div class="card-body">
+            <h2
+              class="card-title text-primary group-hover:text-secondary transition-colors"
+            >
+              {tool.name}
+            </h2>
+            <p class="text-base-content/70">{tool.description}</p>
+          </div>
+        </a>
+      {/each}
     </div>
   </div>
 </div>

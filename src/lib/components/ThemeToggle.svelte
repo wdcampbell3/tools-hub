@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  let isLight = false
+  let isLight = $state(false)
 
   const themeLight = "saasstartertheme-light"
   const themeDark = "saasstartertheme"
@@ -34,18 +34,25 @@
     document.documentElement.setAttribute("data-theme", newTheme)
     localStorage.setItem("theme", newTheme)
   }
+  interface Props {
+    inline?: boolean
+  }
+
+  let { inline = false }: Props = $props()
 </script>
 
-<div class="fixed bottom-4 right-4 z-50">
+<div class={inline ? "" : "fixed bottom-4 right-4 z-50"}>
   <label
-    class="swap swap-rotate btn btn-circle btn-ghost bg-base-100/10 backdrop-blur-[2px] shadow-lg hover:bg-base-100/20 border border-white/10"
+    class="swap swap-rotate btn btn-circle btn-ghost {inline
+      ? 'hover:bg-base-300'
+      : 'bg-base-100/10 backdrop-blur-[2px] shadow-lg hover:bg-base-100/20 border border-white/10'}"
   >
     <!-- this hidden checkbox controls the state -->
     <input type="checkbox" onchange={toggleTheme} checked={isLight} />
 
     <!-- sun icon (shows when dark mode is Active i.e. unchecked -> Switch to Light) -->
     <svg
-      class="swap-off h-5 w-5 fill-current text-white"
+      class="swap-off h-5 w-5 fill-current text-base-content"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
     >

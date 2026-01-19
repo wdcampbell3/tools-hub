@@ -1,9 +1,10 @@
 <script lang="ts">
   import "../app.css"
-  import { navigating } from "$app/stores"
+  import { navigating, page } from "$app/stores"
   import { expoOut } from "svelte/easing"
   import { slide } from "svelte/transition"
   import GoogleAnalytics from "$lib/components/GoogleAnalytics.svelte"
+  import ThemeToggle from "$lib/components/ThemeToggle.svelte"
 
   interface Props {
     children?: import("svelte").Snippet
@@ -28,3 +29,8 @@
   ></div>
 {/if}
 {@render children?.()}
+
+<!-- Hide floating toggle on tools pages since it's in the sidebar there -->
+{#if !$page.url.pathname.startsWith("/tools")}
+  <ThemeToggle />
+{/if}
